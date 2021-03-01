@@ -40,11 +40,9 @@ func main() {
 	mux.HandleFunc("/", c.HandleRequests)
 
 	server := &http.Server{
-
 		Addr:    fmt.Sprintf("%s:%s", os.Getenv("SERVER_API_DOMAIN"), os.Getenv("PORT")),
 		Handler: mux,
 	}
-
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
 
