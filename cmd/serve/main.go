@@ -44,8 +44,8 @@ func main() {
 	// Initializing controllers
 	c := controllers.New()
 
-	// Initializing multiplexer
-	// Mutiplexing with the "/" binded to all api call
+	// http.NewServeMux function to create an empty ServeMux.
+	// mux.HandleFunc function for registering handler for all api requests with the URL path /.
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", c.HandleRequests)
 
