@@ -13,19 +13,32 @@ import (
 	"github.com/joho/godotenv"
 
 	"github.com/juby-gif/pillshare-server/internal/controllers"
+	"github.com/juby-gif/pillshare-server/pkg/utils"
 )
 
 func main() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+	databaseHost := os.Getenv("DATABASE_HOST")
+	databasePort := os.Getenv("DATABASE_PORT")
+	databaseUser := os.Getenv("DATABASE_USER")
+	databasePassword := os.Getenv("DATABASE_PASSWORD")
+	databaseName := os.Getenv("DATABASE_NAME")
 
+	db, err = utils.ConnectDB(databaseHost, databasePort, databaseUser, databasePassword, databaseName)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+
+	fmt.Println(db)
 	c := controllers.New()
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", c.HandleRequests)
-	err := godotenv.Load(".env")
 
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
 	server := &http.Server{
 
 		Addr:    fmt.Sprintf("%s:%s", os.Getenv("SERVER_API_DOMAIN"), os.Getenv("PORT")),
