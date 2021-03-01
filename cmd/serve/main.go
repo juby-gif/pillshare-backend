@@ -27,7 +27,7 @@ func main() {
 	databasePassword := os.Getenv("DATABASE_PASSWORD")
 	databaseName := os.Getenv("DATABASE_NAME")
 
-	db, err = utils.ConnectDB(databaseHost, databasePort, databaseUser, databasePassword, databaseName)
+	db, err := utils.ConnectDB(databaseHost, databasePort, databaseUser, databasePassword, databaseName)
 	if err != nil {
 		log.Fatal(err)
 	}
