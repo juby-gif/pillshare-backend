@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"net/http"
 
-	"github.com/juby-gif/pillshare-server/internal/controllers/models"
+	"github.com/juby-gif/pillshare-server/internal/models"
 )
 
 func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {

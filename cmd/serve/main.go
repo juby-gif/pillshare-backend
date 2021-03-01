@@ -17,10 +17,16 @@ import (
 )
 
 func main() {
+
+	// Load .env file using the package "github.com/joho/godotenv"
+	// If any error occurs while loading, it will output the error as "Error loading .env file"
 	err := godotenv.Load(".env")
 	if err != nil {
 		log.Fatalf("Error loading .env file")
 	}
+
+	// Get the values of environment variables from .env file
+	// Mapping the value to the corresponding keys
 	databaseHost := os.Getenv("DATABASE_HOST")
 	databasePort := os.Getenv("DATABASE_PORT")
 	databaseUser := os.Getenv("DATABASE_USER")
@@ -34,8 +40,12 @@ func main() {
 	defer db.Close()
 
 	fmt.Println(db)
+
+	// Initializing controllers
 	c := controllers.New()
 
+	// Initializing multiplexer
+	// Mutiplexing with the "/" binded to all api call
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", c.HandleRequests)
 
