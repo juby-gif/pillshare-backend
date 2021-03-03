@@ -10,23 +10,14 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/joho/godotenv"
-
 	"github.com/juby-gif/pillshare-server/internal/controllers"
 	"github.com/juby-gif/pillshare-server/pkg/utils"
 )
 
 func main() {
 
-	// Load .env file using the package "github.com/joho/godotenv"
-	// If any error occurs while loading, it will output the error as "Error loading .env file"
-	err := godotenv.Load(".env")
-	if err != nil {
-		log.Fatalf("Error loading .env file")
-	}
-
-	// Get the values of environment variables from .env file
-	// Mapping the value to the corresponding keys
+	// Environment variables will be initialized when app loads up
+	// Map the values to its corresponding keys
 	databaseHost := os.Getenv("DATABASE_HOST")
 	databasePort := os.Getenv("DATABASE_PORT")
 	databaseUser := os.Getenv("DATABASE_USER")
