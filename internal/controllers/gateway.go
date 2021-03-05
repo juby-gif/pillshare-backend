@@ -42,6 +42,41 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ur := repositories.NewUserRepo(c.db)
-	ur.CreateNewUser(ctx, uuid.NewString(), requestData.FirstName, requestData.MiddleName, requestData.LastName, requestData.Username, requestData.Email, requestData.Password, "knibibbb", requestData.CheckedStatus, 0, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null")
-	fmt.Println("User Created")
+	ur.CreateNewUser(
+		ctx,
+		uuid.NewString(),
+		requestData.FirstName,
+		requestData.MiddleName,
+		requestData.LastName,
+		requestData.Username,
+		requestData.Email,
+		requestData.Password,
+		requestData.CheckedStatus,
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+		"null",
+	)
+
+	var responseData = models.RegisterResponse{
+		Message: "You have been registered successfully!",
+	}
+	err = json.NewEncoder(w).Encode(&responseData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }

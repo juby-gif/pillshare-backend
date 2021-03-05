@@ -11,9 +11,8 @@ type User struct {
 	Username                 string `json:"username"`
 	Email                    string `json:"email"`
 	Password                 string `json:"password"`
-	PasswordHash             string `json:"password_hash"`
 	Checked_status           bool   `json:"checked_status"`
-	Age                      int16  `json:"age"`
+	Age                      string `json:"age"`
 	Gender                   string `json:"gender"`
 	Dob                      string `json:"dob"`
 	Address                  string `json:"address"`
@@ -43,6 +42,10 @@ type RegisterRequest struct {
 	CheckedStatus bool   `json:"checked_status"`
 }
 
+type RegisterResponse struct {
+	Message string `json:"message"`
+}
+
 type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
@@ -50,5 +53,5 @@ type LoginRequest struct {
 
 type UserRepo interface {
 	GetUserByEmail(ctx context.Context, email string) (*User, error)
-	CreateNewUser(ctx context.Context, user_id string, first_name string, middle_name string, last_name string, username string, email string, password string, password_hash string, checked_status bool, age int16, gender string, dob string, address string, city string, province string, country string, zip string, phone string, weight string, height string, bmi string, body_mass_index_value string, blood_group string, underlying_health_issues string, other_health_issues string, images string) error
+	CreateNewUser(ctx context.Context, user_id string, first_name string, middle_name string, last_name string, username string, email string, password string, checked_status bool, age string, gender string, dob string, address string, city string, province string, country string, zip string, phone string, weight string, height string, bmi string, body_mass_index_value string, blood_group string, underlying_health_issues string, other_health_issues string, images string) error
 }
