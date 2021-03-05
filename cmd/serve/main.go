@@ -26,14 +26,14 @@ func main() {
 
 	db, err := utils.ConnectDB(databaseHost, databasePort, databaseUser, databasePassword, databaseName)
 	if err != nil {
-		log.Fatal(err)
+		panic(err)
 	}
 	defer db.Close()
 
 	fmt.Println(db)
 
 	// Initializing controllers
-	c := controllers.New()
+	c := controllers.New(db)
 
 	// http.NewServeMux function to create an empty ServeMux.
 	// mux.HandleFunc function for registering handler for all api requests with the URL path /.

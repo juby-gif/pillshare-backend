@@ -1,15 +1,25 @@
 package controllers
 
 import (
+	"database/sql"
 	"net/http"
 	"strings"
+
+	"github.com/juby-gif/pillshare-server/internal/models"
+	"github.com/juby-gif/pillshare-server/internal/repositories"
 )
 
 type Controller struct {
+	db       *sql.DB
+	UserRepo models.UserRepo
 }
 
-func New() *Controller {
-	return &Controller{}
+func New(db *sql.DB) *Controller {
+	userRepo := repositories.NewUserRepo(db)
+	return &Controller{
+		db:       db,
+		UserRepo: userRepo,
+	}
 }
 
 func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {

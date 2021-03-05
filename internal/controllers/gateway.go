@@ -2,16 +2,28 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
 	"net/http"
 
+	"github.com/google/uuid"
 	"github.com/juby-gif/pillshare-server/internal/models"
+	"github.com/juby-gif/pillshare-server/internal/repositories"
 )
 
 func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Login Successful!"))
+	data := r.Body
+	var requestData models.LoginRequest
+
+	err := json.NewDecoder(data).Decode(&requestData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	fmt.Println(requestData.Password)
 }
 
 func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	data := r.Body
 	var requestData models.RegisterRequest
 
@@ -20,18 +32,16 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	// user := &models.User{
-	// 	User_id:        uuid.NewString(),
-	// 	First_name:     requestData.FirstName,
-	// 	Middle_name:    requestData.MiddleName,
-	// 	Last_name:      requestData.LastName,
-	// 	Username:       requestData.Username,
-	// 	Email:          requestData.Email,
-	// 	Password:       requestData.Password,
-	// 	Checked_status: requestData.CheckedStatus,
-	// }
-}
-
-func (c *Controller) getVersion(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("Pillshare-v1.0"))
+	userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
+	if userFound != nil {
+		http.Error(w, "This Email already exists", http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		http.Error(w, "Internal Error", http.StatusBadRequest)
+		return
+	}
+	ur := repositories.NewUserRepo(c.db)
+	ur.CreateNewUser(ctx, uuid.NewString(), requestData.FirstName, requestData.MiddleName, requestData.LastName, requestData.Username, requestData.Email, requestData.Password, "knibibbb", requestData.CheckedStatus, 0, "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null", "null")
+	fmt.Println("User Created")
 }
