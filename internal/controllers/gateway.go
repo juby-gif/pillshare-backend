@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"io/ioutil"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -47,13 +48,28 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 			return
 		} else {
 
+			sessionToken := uuid.New().String()
+			secretKey, err := ioutil.ReadFile(".env")
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+			}
+
+			// //Generate JWT Token
+			accessToken, refreshToken, err := utils.GenerateJWTTokenPair([]byte(secretKey), sessionToken)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			// Get the length of the User struct field
 			// The length will return a value of type "int"
 			length := utils.GetLengthOfUserField(userFound)
 
 			var responseData = models.LoginResponse{
-				Message: "Success! You're Logging in",
-				Length:  length,
+				Message:      "Success! You're Logging in",
+				Length:       length,
+				AccessToken:  accessToken,
+				RefreshToken: refreshToken,
 			}
 			err = json.NewEncoder(w).Encode(&responseData)
 			if err != nil {

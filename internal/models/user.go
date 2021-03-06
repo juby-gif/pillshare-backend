@@ -52,8 +52,10 @@ type LoginRequest struct {
 }
 
 type LoginResponse struct {
-	Message string `json:"message"`
-	Length  int
+	Message      string `json:"message"`
+	Length       int    `json:"length"`
+	AccessToken  string `json:"access_token"`
+	RefreshToken string `json:"refresh_token"`
 }
 
 type UserRepo interface {
