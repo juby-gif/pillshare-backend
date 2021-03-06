@@ -56,7 +56,7 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 
-			//Generate JWT Token
+			// Generate JWT Token pair (`accessToken`,`refreshToken`)
 			accessToken, refreshToken, err := utils.GenerateJWTTokenPair([]byte(secretKey), sessionToken)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
