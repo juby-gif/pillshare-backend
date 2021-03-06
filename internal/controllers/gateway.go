@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 
 	"github.com/google/uuid"
@@ -10,8 +9,15 @@ import (
 	"github.com/juby-gif/pillshare-server/internal/repositories"
 )
 
+var middleName string
+
 func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
+	ctx := r.Context()
 	data := r.Body
+
+	//Validate the data from request
+	// fmt.Println(c.LoginValidator(data))
+
 	var requestData models.LoginRequest
 
 	err := json.NewDecoder(data).Decode(&requestData)
@@ -19,7 +25,15 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println(requestData.Password)
+	userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
+	if userFound == nil {
+		http.Error(w, "This user does not match our records", http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		http.Error(w, "Internal Error", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
@@ -32,51 +46,70 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
-	if userFound != nil {
-		http.Error(w, "This Email already exists", http.StatusBadRequest)
-		return
-	}
-	if err != nil {
-		http.Error(w, "Internal Error", http.StatusBadRequest)
-		return
-	}
-	ur := repositories.NewUserRepo(c.db)
-	ur.CreateNewUser(
-		ctx,
-		uuid.NewString(),
-		requestData.FirstName,
-		requestData.MiddleName,
-		requestData.LastName,
-		requestData.Username,
-		requestData.Email,
-		requestData.Password,
-		requestData.CheckedStatus,
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-		"null",
-	)
 
-	var responseData = models.RegisterResponse{
-		Message: "You have been registered successfully!",
-	}
-	err = json.NewEncoder(w).Encode(&responseData)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// Validate the requestData
+	// If any of the fields FirstName,LastName,Username,Email,Password and CheckedStatus is missing it will return false
+	// If all the fields are validated it will return true
+	if c.RegisterValidator(requestData) == false {
+		http.Error(w, "Fields are not properly formated", http.StatusBadRequest)
 		return
+	} else {
+		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
+		if userFound != nil {
+			http.Error(w, "This Email already exists", http.StatusBadRequest)
+			return
+		}
+		if err != nil {
+			http.Error(w, "Internal Error", http.StatusBadRequest)
+			return
+		}
+
+		// Check the MiddleName of the new user
+		// Assign "null" to the middleName if the field is blank
+		// Assign the value "requestData.MiddleName" to middleName if the field has real value
+		if requestData.MiddleName == "" {
+			middleName = "null"
+		} else {
+			middleName = requestData.MiddleName
+		}
+
+		ur := repositories.NewUserRepo(c.db)
+		ur.CreateNewUser(
+			ctx,
+			uuid.NewString(),
+			requestData.FirstName,
+			middleName,
+			requestData.LastName,
+			requestData.Username,
+			requestData.Email,
+			requestData.Password,
+			requestData.CheckedStatus,
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+			"null",
+		)
+
+		var responseData = models.RegisterResponse{
+			Message: "Congratulations! You are successfully registered!",
+		}
+		err = json.NewEncoder(w).Encode(&responseData)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 }
