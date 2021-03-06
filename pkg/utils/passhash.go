@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"fmt"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -18,7 +17,10 @@ func GenerateHashedPassword(w http.ResponseWriter, r *http.Request, passkey stri
 	return hashedPassword
 }
 
-func CompareHashedPassword(w http.ResponseWriter, r *http.Request, hashedpasskey []byte, requestPasskey []byte) []byte {
+func CompareHashedPassword(w http.ResponseWriter, r *http.Request, hashedpasskey []byte, requestPasskey []byte) bool {
 	err := bcrypt.CompareHashAndPassword(hashedpasskey, requestPasskey)
-	fmt.Println(err)
+	if err != nil {
+		return true
+	}
+	return false
 }

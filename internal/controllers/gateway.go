@@ -17,24 +17,40 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	data := r.Body
 
-	//Validate the data from request
-	// fmt.Println(c.LoginValidator(data))
-
 	var requestData models.LoginRequest
+	if c.LoginValidator(requestData) == false {
+		http.Error(w, "Fields are not properly formated", http.StatusBadRequest)
+		return
+	} else {
+		err := json.NewDecoder(data).Decode(&requestData)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusBadRequest)
+			return
+		}
+		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
+		if userFound == nil {
+			http.Error(w, "This user does not match our records", http.StatusBadRequest)
+			return
+		}
+		if err != nil {
+			http.Error(w, "Internal Error", http.StatusInternalServerError)
+			return
+		}
+		if utils.CompareHashedPassword(w, r, []byte(userFound.Password), []byte(requestData.Password)) == false {
+			http.Error(w, "The password you entered is incorrect", http.StatusBadRequest)
+			return
+		} else {
+			var responseData = models.LoginResponse{
+				Message: "Congratulations! You are successfully registered!",
+				// Length: SizeOf(userFound),
+			}
+			err = json.NewEncoder(w).Encode(&responseData)
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+		}
 
-	err := json.NewDecoder(data).Decode(&requestData)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-	userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
-	if userFound == nil {
-		http.Error(w, "This user does not match our records", http.StatusBadRequest)
-		return
-	}
-	if err != nil {
-		http.Error(w, "Internal Error", http.StatusInternalServerError)
-		return
 	}
 }
 
