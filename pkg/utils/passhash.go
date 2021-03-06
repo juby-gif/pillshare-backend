@@ -20,7 +20,7 @@ func GenerateHashedPassword(w http.ResponseWriter, r *http.Request, passkey stri
 func CompareHashedPassword(w http.ResponseWriter, r *http.Request, hashedpasskey []byte, requestPasskey []byte) bool {
 	err := bcrypt.CompareHashAndPassword(hashedpasskey, requestPasskey)
 	if err != nil {
-		return true
+		return false
 	}
-	return false
+	return true
 }

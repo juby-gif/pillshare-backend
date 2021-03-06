@@ -47,13 +47,13 @@ type RegisterResponse struct {
 }
 
 type LoginRequest struct {
-	Email    string `json:"username"`
+	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
 type LoginResponse struct {
 	Message string `json:"message"`
-	Length  int16
+	Length  int
 }
 
 type UserRepo interface {

@@ -18,15 +18,20 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 	data := r.Body
 
 	var requestData models.LoginRequest
+
+	err := json.NewDecoder(data).Decode(&requestData)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Validate the requestData
+	// If any of the fields Email or Password is missing it will return false
+	// If all the fields are validated it will return true
 	if c.LoginValidator(requestData) == false {
 		http.Error(w, "Fields are not properly formated", http.StatusBadRequest)
 		return
 	} else {
-		err := json.NewDecoder(data).Decode(&requestData)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-			return
-		}
 		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
 		if userFound == nil {
 			http.Error(w, "This user does not match our records", http.StatusBadRequest)
@@ -40,9 +45,14 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "The password you entered is incorrect", http.StatusBadRequest)
 			return
 		} else {
+
+			// Get the length of the User struct field
+			// The length will return a value of type "int"
+			length := utils.GetLengthOfUserField(userFound)
+
 			var responseData = models.LoginResponse{
-				Message: "Congratulations! You are successfully registered!",
-				// Length: SizeOf(userFound),
+				Message: "Success! You're Logging in",
+				Length:  length,
 			}
 			err = json.NewEncoder(w).Encode(&responseData)
 			if err != nil {
