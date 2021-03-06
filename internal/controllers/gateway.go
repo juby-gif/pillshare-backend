@@ -48,13 +48,15 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 			return
 		} else {
 
+			// Generates session id for the logged-in user
+			// Access the `secretKey` from the `.env` file
 			sessionToken := uuid.New().String()
 			secretKey, err := ioutil.ReadFile(".env")
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
 			}
 
-			// //Generate JWT Token
+			//Generate JWT Token
 			accessToken, refreshToken, err := utils.GenerateJWTTokenPair([]byte(secretKey), sessionToken)
 			if err != nil {
 				http.Error(w, err.Error(), http.StatusInternalServerError)
