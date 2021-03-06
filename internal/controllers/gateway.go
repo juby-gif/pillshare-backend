@@ -7,9 +7,11 @@ import (
 	"github.com/google/uuid"
 	"github.com/juby-gif/pillshare-server/internal/models"
 	"github.com/juby-gif/pillshare-server/internal/repositories"
+	"github.com/juby-gif/pillshare-server/pkg/utils"
 )
 
 var middleName string
+var password []byte
 
 func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
@@ -73,6 +75,10 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 			middleName = requestData.MiddleName
 		}
 
+		if requestData.Password != "" {
+			password = utils.GenerateHashedPassword(w, r, requestData.Password)
+		}
+
 		ur := repositories.NewUserRepo(c.db)
 		ur.CreateNewUser(
 			ctx,
@@ -82,7 +88,7 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 			requestData.LastName,
 			requestData.Username,
 			requestData.Email,
-			requestData.Password,
+			string(password),
 			requestData.CheckedStatus,
 			"null",
 			"null",
