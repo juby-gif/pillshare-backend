@@ -223,5 +223,3 @@ func (c *Controller) postRefreshToken(w http.ResponseWriter, r *http.Request, ac
 		return
 	}
 }
-
-// curl -X POST -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTUwOTIwOTMsInNlc3Npb25fdXVpZCI6IjIyYmQ4ZjhjLTI5MTAtNGY4NC05NDQ3LTI5ZWY3OTczODUxNyJ9.IGMsdg1HYII1xQxOuw0S6GaBpFM63QUHq62iv73BnOw" -H "Content-type:application/json" -H "Accept: application/json" -d '{"username":"lalla","password":"123pass"}' http://127.0.0.1:5000/api/v1/login
