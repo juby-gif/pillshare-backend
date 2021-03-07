@@ -189,7 +189,6 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) postRefreshToken(w http.ResponseWriter, r *http.Request, accessToken string) {
 
-	// Generates session id for the logged-in user
 	// Access the `secretKey` from the `.env` file
 	secretKey, err := ioutil.ReadFile(".env")
 	if err != nil {
