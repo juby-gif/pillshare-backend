@@ -38,16 +38,16 @@ func JWTProcessorMiddleware(fn http.HandlerFunc) http.HandlerFunc {
 		// Read our application's signing key and attach it to the application
 		// context so it can flow downstream in all our applications.
 
-		reqToken := r.Header.Get("Authorization")
+		accessToken := r.Header.Get("Authorization")
 
-		if reqToken != "" {
+		if accessToken != "" {
 			// Special thanks to "poise" via https://stackoverflow.com/a/44700761
-			splitToken := strings.Split(reqToken, "JWT ")
-			reqToken = splitToken[1]
-
+			splitToken := strings.Split(accessToken, "JWT ")
+			accessToken = splitToken[1]
+			ctx = context.WithValue(ctx, "access_token", accessToken)
 			// log.Println(reqToken) // For debugging purposes only.
 			secretKey, err := ioutil.ReadFile(".env")
-			sessionUUID, err := utils.ProcessJWTToken(secretKey, reqToken)
+			sessionUUID, err := utils.ProcessJWTToken(secretKey, accessToken)
 			if err == nil {
 				ctx = context.WithValue(ctx, "is_authorized", true)
 				ctx = context.WithValue(ctx, "session_uuid", sessionUUID)

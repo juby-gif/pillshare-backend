@@ -187,4 +187,42 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func (c *Controller) postRefreshToken(w http.ResponseWriter, r *http.Request, accessToken string) {
+
+	// Generates session id for the logged-in user
+	// Access the `secretKey` from the `.env` file
+	secretKey, err := ioutil.ReadFile(".env")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+
+	// Verify our refresh token.
+	// Pass `secretKey` and `accessToken` as the parameters for `ProcessJWTToken`
+	// Returns `sessionToken` if the `err` is nil or
+	// Return `Unauthorized - refresh token expired or invalid` is there is error
+	sessionToken, err := utils.ProcessJWTToken([]byte(secretKey), accessToken)
+	if err != nil {
+		http.Error(w, "Unauthorized - refresh token expired or invalid", http.StatusUnauthorized)
+		return
+	}
+
+	// Generate our JWT token.
+	accessToken, refreshToken, err := utils.GenerateJWTTokenPair([]byte(secretKey), sessionToken)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Generates `responseData` with `AccessToken` and `RefreshToken`
+	responseData := models.RefreshTokenResponse{
+		AccessToken:  accessToken,
+		RefreshToken: refreshToken,
+	}
+
+	if err := json.NewEncoder(w).Encode(&responseData); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 // curl -X POST -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTUwOTIwOTMsInNlc3Npb25fdXVpZCI6IjIyYmQ4ZjhjLTI5MTAtNGY4NC05NDQ3LTI5ZWY3OTczODUxNyJ9.IGMsdg1HYII1xQxOuw0S6GaBpFM63QUHq62iv73BnOw" -H "Content-type:application/json" -H "Accept: application/json" -d '{"username":"lalla","password":"123pass"}' http://127.0.0.1:5000/api/v1/login

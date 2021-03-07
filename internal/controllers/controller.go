@@ -35,6 +35,7 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		n           int
 		authStatus  bool
 		sessionUUID string
+		accessToken string
 	)
 
 	// Check for the context has key `url_split` and `length` that
@@ -48,12 +49,13 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 
 		// Check for the context has key `is_authorized` and `session_uuid` that
 		// have values not equal to nil
-		if ctx.Value("is_authorized") != nil && ctx.Value("session_uuid") != nil {
+		if ctx.Value("is_authorized") != nil && ctx.Value("session_uuid") != nil && ctx.Value("access_token") != nil {
 
 			// Get the values of keys `is_authorized` & `session_uuid` from the context
 			// Assign the values to `authStatus` and `sessionUUID`
 			authStatus = ctx.Value("is_authorized").(bool)
 			sessionUUID = ctx.Value("session_uuid").(string)
+			accessToken = ctx.Value("access_token").(string)
 		}
 	}
 
@@ -66,6 +68,8 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 	switch {
 	case n == 3 && URL[2] == "version" && r.Method == "GET":
 		c.getVersion(w, r)
+	case n == 3 && URL[2] == "refresh-token" && r.Method == "GET":
+		c.postRefreshToken(w, r, accessToken)
 	case n == 3 && URL[2] == "login" && r.Method == "POST":
 		c.postLogin(w, r)
 	case n == 3 && URL[2] == "register" && r.Method == "POST":
