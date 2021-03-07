@@ -1,10 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
+	"time"
 
+	cache "github.com/go-redis/cache/v8"
 	"github.com/google/uuid"
 
 	"github.com/juby-gif/pillshare-server/internal/models"
@@ -63,11 +66,30 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 				return
 			}
 
+			// Implemented redis-cache
+			mycache := c.cache
+
+			// Set the cache with `Key` as `sessionToken`
+			// and `Value` as `userFound`
+			// Set the expiration for the cache as 3 days
+			ctx := context.Background()
+			key := sessionToken
+			value := userFound
+			if err := mycache.Set(&cache.Item{
+				Ctx:   ctx,
+				Key:   key,
+				Value: value,
+				TTL:   time.Hour * 72,
+			}); err != nil {
+				http.Error(w, err.Error(), http.StatusInternalServerError)
+				return
+			}
+
 			// Get the length of the User struct field
 			// The length will return a value of type "int"
 			length := utils.GetLengthOfUserField(userFound)
 
-			var responseData = models.LoginResponse{
+			var responseData = &models.LoginResponse{
 				Message:      "Success! You're Logging in",
 				Length:       length,
 				AccessToken:  accessToken,
@@ -164,3 +186,5 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 }
+
+// curl -X POST -H "Authorization:JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE2MTUwOTIwOTMsInNlc3Npb25fdXVpZCI6IjIyYmQ4ZjhjLTI5MTAtNGY4NC05NDQ3LTI5ZWY3OTczODUxNyJ9.IGMsdg1HYII1xQxOuw0S6GaBpFM63QUHq62iv73BnOw" -H "Content-type:application/json" -H "Accept: application/json" -d '{"username":"lalla","password":"123pass"}' http://127.0.0.1:5000/api/v1/login

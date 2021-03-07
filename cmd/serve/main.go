@@ -38,7 +38,7 @@ func main() {
 	// http.NewServeMux function to create an empty ServeMux.
 	// mux.HandleFunc function for registering handler for all api requests with the URL path /.
 	mux := http.NewServeMux()
-	mux.HandleFunc("/", c.HandleRequests)
+	mux.HandleFunc("/", controllers.ChainMiddleware(c.HandleRequests))
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf("%s:%s", os.Getenv("SERVER_API_DOMAIN"), os.Getenv("SERVER_PORT")),
