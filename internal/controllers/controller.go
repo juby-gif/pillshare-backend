@@ -30,12 +30,32 @@ func New(db *sql.DB) *Controller {
 
 func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
+	var (
+		URL         []string
+		n           int
+		authStatus  bool
+		sessionUUID string
+	)
 
-	// Get URL,n(length),authStatus and sessionUUID from the context
-	URL := ctx.Value("url_split").([]string)
-	n := ctx.Value("length").(int)
-	authStatus := ctx.Value("is_authorized").(bool)
-	sessionUUID := ctx.Value("session_uuid").(string)
+	// Check for the context has key `url_split` and `length` that
+	// have values not equal to nil
+	if ctx.Value("url_split") != nil && ctx.Value("length") != nil {
+
+		// Get the values of keys `URL` & `n`(length) from the context
+		// Assign the values to `URL` and `n`
+		URL = ctx.Value("url_split").([]string)
+		n = ctx.Value("length").(int)
+
+		// Check for the context has key `is_authorized` and `session_uuid` that
+		// have values not equal to nil
+		if ctx.Value("is_authorized") != nil && ctx.Value("session_uuid") != nil {
+
+			// Get the values of keys `is_authorized` & `session_uuid` from the context
+			// Assign the values to `authStatus` and `sessionUUID`
+			authStatus = ctx.Value("is_authorized").(bool)
+			sessionUUID = ctx.Value("session_uuid").(string)
+		}
+	}
 
 	// Get User modal from cache
 	var user models.User
