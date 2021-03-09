@@ -5,13 +5,13 @@ import (
 )
 
 type User struct {
-	First_name               string `json:"first_name"`
-	Middle_name              string `json:"middle_name"`
-	Last_name                string `json:"last_name"`
+	First_name               string `json:"firstName"`
+	Middle_name              string `json:"middleName"`
+	Last_name                string `json:"lastName"`
 	Username                 string `json:"username"`
 	Email                    string `json:"email"`
 	Password                 string `json:"password"`
-	Checked_status           bool   `json:"checked_status"`
+	Checked_status           bool   `json:"checkedStatus"`
 	Age                      string `json:"age"`
 	Gender                   string `json:"gender"`
 	Dob                      string `json:"dob"`
@@ -24,22 +24,22 @@ type User struct {
 	Weight                   string `json:"weight"`
 	Height                   string `json:"height"`
 	BMI                      string `json:"bmi"`
-	Body_mass_index_value    string `json:"body_mass_index_value"`
-	Blood_group              string `json:"blood_group"`
-	Underlying_health_issues string `json:"underlying_health_issues"`
-	Other_health_issues      string `json:"other_health_issues"`
+	Body_mass_index_value    string `json:"bodyMassIndexValue"`
+	Blood_group              string `json:"bloodGroup"`
+	Underlying_health_issues string `json:"underlyingHealthIssues"`
+	Other_health_issues      string `json:"otherHealthIssues"`
 	Images                   string `json:"images"`
-	User_id                  string `json:"user_id"`
+	User_id                  string `json:"userId"`
 }
 
 type RegisterRequest struct {
-	FirstName     string `json:"first_name"`
-	MiddleName    string `json:"middle_name"`
-	LastName      string `json:"last_name"`
+	FirstName     string `json:"firstName"`
+	MiddleName    string `json:"middleName"`
+	LastName      string `json:"lastName"`
 	Username      string `json:"username"`
 	Email         string `json:"email"`
 	Password      string `json:"password"`
-	CheckedStatus bool   `json:"checked_status"`
+	CheckedStatus bool   `json:"checkedStatus"`
 }
 
 type RegisterResponse struct {
@@ -54,13 +54,13 @@ type LoginRequest struct {
 type LoginResponse struct {
 	Message      string `json:"message"`
 	Length       int    `json:"length"`
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 type RefreshTokenResponse struct {
-	AccessToken  string `json:"access_token"`
-	RefreshToken string `json:"refresh_token"`
+	AccessToken  string `json:"accessToken"`
+	RefreshToken string `json:"refreshToken"`
 }
 
 type UserRepo interface {

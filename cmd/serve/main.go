@@ -10,6 +10,8 @@ import (
 	"syscall"
 	"time"
 
+	"github.com/rs/cors"
+
 	"github.com/juby-gif/pillshare-server/internal/controllers"
 	"github.com/juby-gif/pillshare-server/pkg/utils"
 )
@@ -42,7 +44,7 @@ func main() {
 
 	server := &http.Server{
 		Addr:    fmt.Sprintf("%s:%s", os.Getenv("SERVER_API_DOMAIN"), os.Getenv("SERVER_PORT")),
-		Handler: mux,
+		Handler: cors.Default().Handler(mux),
 	}
 	done := make(chan os.Signal, 1)
 	signal.Notify(done, os.Interrupt, syscall.SIGINT, syscall.SIGTERM)
