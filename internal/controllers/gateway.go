@@ -34,12 +34,12 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 	// If any of the fields Email or Password is missing it will return false
 	// If all the fields are validated it will return true
 	if c.LoginValidator(requestData) == false {
-		http.Error(w, "Fields are not properly formated", http.StatusBadRequest)
-		return
+		utils.GetCORSErrResponse(w, "Fields are not properly formated", http.StatusBadRequest)
+			return
 	} else {
 		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
 		if userFound == nil {
-			http.Error(w, "This user does not match our records", http.StatusBadRequest)
+			utils.GetCORSErrResponse(w, "This user does not match our records", http.StatusBadRequest)
 			return
 		}
 		if err != nil {
@@ -47,8 +47,7 @@ func (c *Controller) postLogin(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if utils.CompareHashedPassword(w, r, []byte(userFound.Password), []byte(requestData.Password)) == false {
-			http.Error(w, "The password you entered is incorrect", http.StatusBadRequest)
-			return
+			utils.GetCORSErrResponse(w, "The password you entered is incorrect", http.StatusBadRequest)
 		} else {
 
 			// Generates session id for the logged-in user

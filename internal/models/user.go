@@ -58,6 +58,10 @@ type LoginResponse struct {
 	RefreshToken string `json:"refreshToken"`
 }
 
+type LoginErrorResponse struct {
+	Message      string `json:"message"`
+}
+
 type RefreshTokenResponse struct {
 	AccessToken  string `json:"accessToken"`
 	RefreshToken string `json:"refreshToken"`
