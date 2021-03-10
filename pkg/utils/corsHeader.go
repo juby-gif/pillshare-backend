@@ -10,7 +10,7 @@ import (
 func GetCORSErrResponse(w http.ResponseWriter, message string, code int) {
 
 	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	w.WriteHeader(http.StatusBadRequest)
+	w.WriteHeader(code)
 	responseData := &models.LoginErrorResponse{
 		Message:message,
 	}
