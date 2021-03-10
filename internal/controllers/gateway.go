@@ -119,12 +119,12 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 	// If any of the fields FirstName,LastName,Username,Email,Password and CheckedStatus is missing it will return false
 	// If all the fields are validated it will return true
 	if c.RegisterValidator(requestData) == false {
-		http.Error(w, "Fields are not properly formated", http.StatusBadRequest)
-		return
+		utils.GetCORSErrResponse(w, "Fields are not properly formated", http.StatusBadRequest)
+			return
 	} else {
 		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
 		if userFound != nil {
-			http.Error(w, "This Email already exists", http.StatusBadRequest)
+			utils.GetCORSErrResponse(w, "This Email already exists", http.StatusBadRequest)
 			return
 		}
 		if err != nil {
