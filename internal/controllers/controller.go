@@ -99,7 +99,12 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.getHello(w, r)
 		}
-	
+	case n == 3 && URL[2] == "user" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getUserProfile(w, r)
+		}
 	default:
 		http.NotFound(w, r)
 	}
