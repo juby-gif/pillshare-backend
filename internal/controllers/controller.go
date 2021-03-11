@@ -3,7 +3,7 @@ package controllers
 import (
 	"context"
 	"database/sql"
-	"fmt"
+	// "fmt"
 	"net/http"
 
 	cache "github.com/go-redis/cache/v8"
@@ -63,7 +63,11 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 	// Get User modal from cache
 	var user models.User
 	if err := c.cache.Get(ctx, sessionUUID, &user); err == nil {
-		fmt.Println(user)
+
+		// For debugging purpose only
+		// fmt.Println(user)
+
+		// Saving the `user.User_id` from cache to context with key `user_id`
 		ctx = context.WithValue(ctx, "user_id", user.User_id)
 		r = r.WithContext(ctx)
 	}

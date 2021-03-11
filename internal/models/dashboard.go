@@ -50,6 +50,3 @@ type DashboardResponse struct {
 	AlertsResponded     int               `json:"alertResponded"`
 }
 
-type DashboardRequest struct {
-	Params string  `json:"params"`
-}
