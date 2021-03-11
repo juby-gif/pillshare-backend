@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"context"
 	"database/sql"
 	"fmt"
 	"net/http"
@@ -63,6 +64,8 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 	var user models.User
 	if err := c.cache.Get(ctx, sessionUUID, &user); err == nil {
 		fmt.Println(user)
+		ctx = context.WithValue(ctx, "user_id", user.User_id)
+		r = r.WithContext(ctx)
 	}
 
 	switch {
@@ -80,12 +83,12 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.getHello(w, r)
 		}
-	// case n == 3 && URL[2] == "dashboard" && r.Method == "GET":
-	// 	if authStatus != true {
-	// 		utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-	// 	} else {
-	// 		c.getDashboard(w, r)
-	// 	}
+	case n == 3 && URL[2] == "dashboard" && r.Method == "POST":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.postDashboard(w, r)
+		}
 	default:
 		http.NotFound(w, r)
 	}
