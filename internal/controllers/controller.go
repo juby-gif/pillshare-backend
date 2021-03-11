@@ -87,12 +87,19 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.getHello(w, r)
 		}
-	case n == 3 && URL[2] == "dashboard" && r.Method == "POST":
+	case n == 3 && URL[2] == "dashboard" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
-			c.postDashboard(w, r)
+			c.getDashboard(w, r)
 		}
+	case n == 3 && URL[2] == "hello" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getHello(w, r)
+		}
+	
 	default:
 		http.NotFound(w, r)
 	}
