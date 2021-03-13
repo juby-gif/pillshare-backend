@@ -6,80 +6,80 @@ import (
 
 func GetLengthOfUserField(user *models.User) int {
 	userFieldsArr := []interface{}{}
-	if user.First_name != "null" {
-		userFieldsArr = append(userFieldsArr, user.First_name)
+	if user.FirstName != "" {
+		userFieldsArr = append(userFieldsArr, user.FirstName)
 	}
-	if user.Middle_name != "null" {
-		userFieldsArr = append(userFieldsArr, user.Middle_name)
+	if user.MiddleName != "" {
+		userFieldsArr = append(userFieldsArr, user.MiddleName)
 	}
-	if user.Last_name != "null" {
-		userFieldsArr = append(userFieldsArr, user.Last_name)
+	if user.LastName != "" {
+		userFieldsArr = append(userFieldsArr, user.LastName)
 	}
-	if user.Username != "null" {
+	if user.Username != "" {
 		userFieldsArr = append(userFieldsArr, user.Username)
 	}
-	if user.Email != "null" {
+	if user.Email != "" {
 		userFieldsArr = append(userFieldsArr, user.Email)
 	}
-	if user.Password != "null" {
+	if user.Password != "" {
 		userFieldsArr = append(userFieldsArr, user.Password)
 	}
 
-	userFieldsArr = append(userFieldsArr, user.Checked_status)
+	userFieldsArr = append(userFieldsArr, user.CheckedStatus)
 
-	if user.Age != "null" {
+	if user.Age != "" {
 		userFieldsArr = append(userFieldsArr, user.Age)
 	}
-	if user.Gender != "null" {
+	if user.Gender != "" {
 		userFieldsArr = append(userFieldsArr, user.Gender)
 	}
-	if user.Dob != "null" {
+	if user.Dob != "" {
 		userFieldsArr = append(userFieldsArr, user.Dob)
 	}
-	if user.Address != "null" {
+	if user.Address != "" {
 		userFieldsArr = append(userFieldsArr, user.Address)
 	}
-	if user.City != "null" {
+	if user.City != "" {
 		userFieldsArr = append(userFieldsArr, user.City)
 	}
-	if user.Country != "null" {
+	if user.Country != "" {
 		userFieldsArr = append(userFieldsArr, user.Country)
 	}
-	if user.Province != "null" {
+	if user.Province != "" {
 		userFieldsArr = append(userFieldsArr, user.Province)
 	}
-	if user.Zip != "null" {
+	if user.Zip != "" {
 		userFieldsArr = append(userFieldsArr, user.Zip)
 	}
-	if user.Phone != "null" {
+	if user.Phone != "" {
 		userFieldsArr = append(userFieldsArr, user.Phone)
 	}
-	if user.Weight != "null" {
+	if user.Weight != "" {
 		userFieldsArr = append(userFieldsArr, user.Weight)
 	}
-	if user.Height != "null" {
+	if user.Height != "" {
 		userFieldsArr = append(userFieldsArr, user.Height)
 	}
-	if user.BMI != "null" {
+	if user.BMI != "" {
 		userFieldsArr = append(userFieldsArr, user.BMI)
 	}
-	if user.Body_mass_index_value != "null" {
-		userFieldsArr = append(userFieldsArr, user.Body_mass_index_value)
+	if user.BodyMassIndexValue != "" {
+		userFieldsArr = append(userFieldsArr, user.BodyMassIndexValue)
 	}
-	if user.Blood_group != "null" {
-		userFieldsArr = append(userFieldsArr, user.Blood_group)
+	if user.BloodGroup != "" {
+		userFieldsArr = append(userFieldsArr, user.BloodGroup)
 	}
-	if user.Underlying_health_issues != "null" {
-		userFieldsArr = append(userFieldsArr, user.Underlying_health_issues)
+	if user.UnderlyingHealthIssues != "" {
+		userFieldsArr = append(userFieldsArr, user.UnderlyingHealthIssues)
 	}
-	if user.Other_health_issues != "null" {
-		userFieldsArr = append(userFieldsArr, user.Other_health_issues)
+	if user.OtherHealthIssues != "" {
+		userFieldsArr = append(userFieldsArr, user.OtherHealthIssues)
 	}
-	if user.Images != "null" {
-		userFieldsArr = append(userFieldsArr, user.Images)
-	}
-	if user.User_id != "null" {
-		userFieldsArr = append(userFieldsArr, user.User_id)
+	// if len(user.Images) != 0 {
+	// 	userFieldsArr = append(userFieldsArr, user.Images)
+	// }
+	if user.UserId != "" {
+		userFieldsArr = append(userFieldsArr, user.UserId)
 	}
 	return len(userFieldsArr)
 }

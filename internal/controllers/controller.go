@@ -67,8 +67,8 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		// For debugging purpose only
 		// fmt.Println(user)
 
-		// Saving the `user.User_id` from cache to context with key `user_id`
-		ctx = context.WithValue(ctx, "user_id", user.User_id)
+		// Saving the `user` from cache to context with key `user`
+		ctx = context.WithValue(ctx, "user", user)
 		r = r.WithContext(ctx)
 	}
 
@@ -104,6 +104,12 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.getUserProfile(w, r)
+		}
+	case n == 3 && URL[2] == "update-user" && r.Method == "PATCH":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.patchUserProfile(w, r)
 		}
 	default:
 		http.NotFound(w, r)

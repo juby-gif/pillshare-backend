@@ -128,15 +128,15 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 		if err != nil {
-			http.Error(w, "Internal Error", http.StatusBadRequest)
+			utils.GetCORSErrResponse(w, "Server Error", http.StatusInternalServerError)
 			return
 		}
 
 		// Check the MiddleName of the new user
-		// Assign "null" to the middleName if the field is blank
+		// Assign "" to the middleName if the field is blank
 		// Assign the value "requestData.MiddleName" to middleName if the field has real value
 		if requestData.MiddleName == "" {
-			middleName = "null"
+			middleName = ""
 		} else {
 			middleName = requestData.MiddleName
 		}
@@ -146,6 +146,7 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 		}
 
 		ur := repositories.NewUserRepo(c.db)
+		// images := [] string{}
 		ur.CreateNewUser(
 			ctx,
 			uuid.NewString(),
@@ -156,23 +157,23 @@ func (c *Controller) postRegister(w http.ResponseWriter, r *http.Request) {
 			requestData.Email,
 			string(password),
 			requestData.CheckedStatus,
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
-			"null",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			"",
+			// images,
 		)
 
 		var responseData = models.RegisterResponse{
