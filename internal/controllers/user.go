@@ -1,9 +1,13 @@
 package controllers
 
 import (
+	"context"
 	"encoding/json"
-	// "fmt"
+	"fmt"
 	"net/http"
+	"time"
+
+	cache "github.com/go-redis/cache/v8"
 
 	"github.com/juby-gif/pillshare-server/internal/models"
 	"github.com/juby-gif/pillshare-server/pkg/utils"
@@ -52,14 +56,19 @@ func (c *Controller) patchUserProfile(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	loggedInUser := ctx.Value("user").(models.User)
 	data := r.Body
-	var requestData models.User
+	sessionToken := ctx.Value("session_uuid").(string)
 
+	// For Debugging purpose only
+	// fmt.Println(sessionToken)
+
+	var requestData models.User
 	err := json.NewDecoder(data).Decode(&requestData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 	// fmt.Println(requestData)
+
 	length := utils.GetLengthOfUserField(&requestData)
 	var middleName string
 	if length >= 20 {
@@ -95,6 +104,30 @@ func (c *Controller) patchUserProfile(w http.ResponseWriter, r *http.Request) {
 		}
 		err := c.UserRepo.UpdateUser(ctx, &user)
 		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
+		if userFound == nil {
+			utils.GetCORSErrResponse(w, "This user does not match our records", http.StatusBadRequest)
+			return
+		}
+		// Implemented redis-cache
+		mycache := c.cache
+
+		// Set the cache with `Key` as `sessionToken`
+		// and `Value` as `userFound`
+		// Set the expiration for the cache as 3 days
+		ctx := context.Background()
+		key := sessionToken
+		value := userFound
+		if err := mycache.Set(&cache.Item{
+			Ctx:   ctx,
+			Key:   key,
+			Value: value,
+			TTL:   time.Hour * 72,
+		}); err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
