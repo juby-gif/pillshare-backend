@@ -105,3 +105,44 @@ func (r *UserRepo) GetUserByEmail(ctx context.Context, email string) (*models.Us
 	}
 	return m, nil
 }
+
+func (r *UserRepo) UpdateUser(ctx context.Context, m *models.User) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	query := "UPDATE users SET first_name = $1,middle_name = $2,last_name = $3,username = $4,email = $5,checked_status = $6,age = $7,gender = $8,dob = $9,address = $10,city = $11,province = $12,country = $13,zip = $14,phone = $15,weight = $16,height = $17,bmi = $18,body_mass_index_value = $19,blood_group = $20,underlying_health_issues = $21,other_health_issues = $22 WHERE user_id = $23"
+	stmt, err := r.db.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(
+		ctx,
+		&m.FirstName,
+		&m.MiddleName,
+		&m.LastName,
+		&m.Username,
+		&m.Email,
+		&m.CheckedStatus,
+		&m.Age,
+		&m.Gender,
+		&m.Dob,
+		&m.Address,
+		&m.City,
+		&m.Province,
+		&m.Country,
+		&m.Zip,
+		&m.Phone,
+		&m.Weight,
+		&m.Height,
+		&m.BMI,
+		&m.BodyMassIndexValue,
+		&m.BloodGroup,
+		&m.UnderlyingHealthIssues,
+		&m.OtherHealthIssues,
+		// &m.Images,
+		&m.UserId,
+	)
+	return err
+}

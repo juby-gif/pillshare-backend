@@ -2,6 +2,7 @@ package models
 
 import (
 	"context"
+	// "github.com/juby-gif/pillshare-server/internal/models"
 )
 
 type User struct {
@@ -29,7 +30,7 @@ type User struct {
 	UnderlyingHealthIssues string `json:"underlyingHealthIssues"`
 	OtherHealthIssues      string `json:"otherHealthIssues"`
 	// Images                 []string `json:"images"`
-	UserId                 string `json:"userId,omitempty" bson:"userId,omitempty"`
+	UserId string `json:"userId,omitempty" bson:"userId,omitempty"`
 }
 
 type RegisterRequest struct {
@@ -67,7 +68,13 @@ type RefreshTokenResponse struct {
 	RefreshToken string `json:"refreshToken"`
 }
 
+type PatchResponse struct {
+	Message string `json:"message"`
+	Length  int    `json:"length"`
+}
+
 type UserRepo interface {
 	GetUserByEmail(ctx context.Context, email string) (*User, error)
 	CreateNewUser(ctx context.Context, user_id string, first_name string, middle_name string, last_name string, username string, email string, password string, checked_status bool, age string, gender string, dob string, address string, city string, province string, country string, zip string, phone string, weight string, height string, bmi string, body_mass_index_value string, blood_group string, underlying_health_issues string, other_health_issues string) error
+	UpdateUser(ctx context.Context, m *User) error
 }
