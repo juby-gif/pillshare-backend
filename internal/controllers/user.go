@@ -108,20 +108,30 @@ func (c *Controller) patchUserProfile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
+		
+
 		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
 		if userFound == nil {
 			utils.GetCORSErrResponse(w, "This user does not match our records", http.StatusBadRequest)
 			return
 		}
+
 		// Implemented redis-cache
 		mycache := c.cache
-
-		// Set the cache with `Key` as `sessionToken`
-		// and `Value` as `userFound`
-		// Set the expiration for the cache as 3 days
 		ctx := context.Background()
 		key := sessionToken
 		value := userFound
+
+		//Deletes the user data stored in cache using `key`
+		err = c.cache.Delete(ctx, key)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Set the cache with `Key` as `sessionToken`
+		// and the new record `Value` as `userFound`
+		// Set the expiration for the cache as 3 days
 		if err := mycache.Set(&cache.Item{
 			Ctx:   ctx,
 			Key:   key,
