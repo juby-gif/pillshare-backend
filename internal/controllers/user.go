@@ -108,8 +108,6 @@ func (c *Controller) patchUserProfile(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		
-
 		userFound, err := c.UserRepo.GetUserByEmail(ctx, requestData.Email)
 		if userFound == nil {
 			utils.GetCORSErrResponse(w, "This user does not match our records", http.StatusBadRequest)
