@@ -47,6 +47,11 @@ type RegisterResponse struct {
 	Message string `json:"message"`
 }
 
+type NavHeaderResponse struct {
+	Fname string `json:"fName"`
+	Lname string `json:"lName"`
+}
+
 type LoginRequest struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`

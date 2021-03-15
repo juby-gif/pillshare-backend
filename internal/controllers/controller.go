@@ -71,7 +71,6 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		ctx = context.WithValue(ctx, "user", user)
 		r = r.WithContext(ctx)
 	}
-
 	switch {
 	case n == 3 && URL[2] == "version" && r.Method == "GET":
 		c.getVersion(w, r)
@@ -81,12 +80,6 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		c.postLogin(w, r)
 	case n == 3 && URL[2] == "register" && r.Method == "POST":
 		c.postRegister(w, r)
-	case n == 3 && URL[2] == "hello" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getHello(w, r)
-		}
 	case n == 3 && URL[2] == "dashboard" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
@@ -111,6 +104,12 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.patchUserProfile(w, r)
 		}
+	case n == 3 && URL[2] == "nav-header" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getNavHeader(w, r, user)
+		}	
 	default:
 		http.NotFound(w, r)
 	}
