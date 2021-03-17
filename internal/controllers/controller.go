@@ -14,18 +14,21 @@ import (
 )
 
 type Controller struct {
-	db       *sql.DB
-	UserRepo models.UserRepo
-	cache    *cache.Cache
+	db            *sql.DB
+	UserRepo      models.UserRepo
+	DashboardRepo models.DashboardRepo
+	cache         *cache.Cache
 }
 
 func New(db *sql.DB) *Controller {
 	userRepo := repositories.NewUserRepo(db)
+	dashboardRepo := repositories.NewDashboardRepo(db)
 	cache := utils.RedisCache()
 	return &Controller{
-		db:       db,
-		UserRepo: userRepo,
-		cache:    cache,
+		db:            db,
+		UserRepo:      userRepo,
+		DashboardRepo: dashboardRepo,
+		cache:         cache,
 	}
 }
 
@@ -69,6 +72,7 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 
 		// Saving the `user` from cache to context with key `user`
 		ctx = context.WithValue(ctx, "user", user)
+		ctx = context.WithValue(ctx, "user_id", user.UserId)
 		r = r.WithContext(ctx)
 	}
 	switch {
@@ -80,11 +84,17 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		c.postLogin(w, r)
 	case n == 3 && URL[2] == "register" && r.Method == "POST":
 		c.postRegister(w, r)
-	case n == 3 && URL[2] == "dashboard" && r.Method == "GET":
+	case n == 3 && URL[2] == "dashboard-datum" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.getDashboard(w, r)
+		}
+	case n == 3 && URL[2] == "dashboard" && r.Method == "POST":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.postDashboard(w, r)
 		}
 	case n == 3 && URL[2] == "hello" && r.Method == "GET":
 		if authStatus != true {
@@ -109,7 +119,7 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.getNavHeader(w, r, user)
-		}	
+		}
 	default:
 		http.NotFound(w, r)
 	}
