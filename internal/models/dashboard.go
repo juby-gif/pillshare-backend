@@ -29,6 +29,7 @@ type BloodPressure struct {
 
 type BodyTemperature struct {
 	InstrumentID int     `json:"instrumentId"`
+	Reading      int     `json:"reading"`
 	Percentage   float64 `json:"percentage"`
 	Time         string  `json:"time"`
 }

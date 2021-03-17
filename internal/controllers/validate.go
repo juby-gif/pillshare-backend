@@ -1,8 +1,6 @@
 package controllers
 
 import (
-	"fmt"
-
 	"github.com/juby-gif/pillshare-server/internal/models"
 )
 
