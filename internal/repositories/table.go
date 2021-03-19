@@ -23,7 +23,7 @@ func (med *MedicalRepo) CreateNewMedicalRecord(ctx context.Context, m *models.Me
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 	query := "INSERT INTO medical_database (user_id,name,dose,measure,is_deleted,dosage,before_or_after,duration,start_date,end_date,intervals,reason) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
-
+	fmt.Println("Processing...",m.UserId)
 	stmt, err := med.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err

@@ -37,7 +37,6 @@ func (c *Controller) postMedicalRecord(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
-	fmt.Println(requestData)
 	// if c.MedicalDataValidator(requestData) == false {
 	// 	utils.GetCORSErrResponse(w, "Fields are not properly formated", http.StatusBadRequest)
 	// 	return
@@ -51,34 +50,22 @@ func (c *Controller) postMedicalRecord(w http.ResponseWriter, r *http.Request) {
 	duration := requestData.Duration
 	startDate := requestData.StartDate
 	endDate := requestData.EndDate
-	intervals := requestData.Intervals
+	intervals :=  utils.GetMarshalledIntervals(w, r,requestData.Intervals) 
 	reason := requestData.Reason
-
-	fmt.Println(name, userId)
-	fmt.Println(dose)
-	fmt.Println(measure)
-	fmt.Println(isDeleted)
-	fmt.Println(dosage)
-	fmt.Println(beforeOrAfter)
-	fmt.Println(duration)
-	fmt.Println(startDate)
-	fmt.Println(endDate)
-	fmt.Println(intervals)
-	fmt.Println(reason)
-	// record := models.MedicalRecord{
-	// 	UserId:        userId,
-	// 	Name:          firnamestName,
-	// 	Dose:          dose,
-	// 	Measure:       measure,
-	// 	IsDeleted:     isDeleted,
-	// 	Dosage:        dosage,
-	// 	BeforeOrAfter: beforeOrAfter,
-	// 	Duration:      duration,
-	// 	StartDate:     startDate,
-	// 	EndDate:       endDate,
-	// 	Intervals:     intervals,
-	// 	Reason:        reason,
-	// }
-	// fmt.Println(record)
-	// c.MedicalRepo.CreateOrUpdateMedicalRecordByUserId(ctx, userId, &record)
+	
+	record := models.MedicalRecord{
+		UserId:        userId,
+		Name:          name,
+		Dose:          dose,
+		Measure:       measure,
+		IsDeleted:     isDeleted,
+		Dosage:        dosage,
+		BeforeOrAfter: beforeOrAfter,
+		Duration:      int(duration),
+		StartDate:     startDate,
+		EndDate:       endDate,
+		Intervals:     string(intervals),
+		Reason:        reason,
+	}
+	c.MedicalRepo.CreateOrUpdateMedicalRecordByUserId(ctx, userId, &record)
 }
