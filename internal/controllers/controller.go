@@ -17,17 +17,20 @@ type Controller struct {
 	db            *sql.DB
 	UserRepo      models.UserRepo
 	DashboardRepo models.DashboardRepo
+	MedicalRepo models.MedicalRepo
 	cache         *cache.Cache
 }
 
 func New(db *sql.DB) *Controller {
 	userRepo := repositories.NewUserRepo(db)
 	dashboardRepo := repositories.NewDashboardRepo(db)
+	medicalRepo := repositories.NewMedicalRepo(db)
 	cache := utils.RedisCache()
 	return &Controller{
 		db:            db,
 		UserRepo:      userRepo,
 		DashboardRepo: dashboardRepo,
+		MedicalRepo: medicalRepo,
 		cache:         cache,
 	}
 }
@@ -120,7 +123,24 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.getNavHeader(w, r, user)
 		}
+	
+	
+	
+	
+	
+	case n == 3 && URL[2] == "medical-datum" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getMedicalDatum(w, r)
+		}
+	case n == 3 && URL[2] == "medical-data" && r.Method == "POST":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.postMedicalRecord(w, r)
+		}
 	default:
 		http.NotFound(w, r)
 	}
-}
+	}
