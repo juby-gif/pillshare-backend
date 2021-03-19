@@ -48,3 +48,12 @@ func GetUnMarshalledOxygenSaturation(w http.ResponseWriter, r *http.Request, use
 	}
 	return &oxygenSaturation
 }
+
+func GetUnMarshalledIntervals(w http.ResponseWriter, r *http.Request, interval string) *models.Intervals {
+	var intervals models.Intervals
+	err := json.Unmarshal([]byte(interval), &intervals)
+	if err != nil {
+		GetCORSErrResponse(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+	return &intervals
+}

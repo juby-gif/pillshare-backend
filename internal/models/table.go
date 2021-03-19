@@ -41,7 +41,17 @@ type MedicalDataRequest struct {
 }
 
 type MedicalDataResponse struct {
-	message string `json:"message"`
+	Name          string     `json:"name"`
+	Dose          string     `json:"dose"`
+	Measure       string     `json:"measure"`
+	IsDeleted     bool       `json:"isDeleted"`
+	Dosage        string     `json:"dosage"`
+	BeforeOrAfter string     `json:"beforeOrAfter"`
+	Duration      int        `json:"duration"`
+	StartDate     time.Time  `json:"startDate"`
+	EndDate       time.Time  `json:"endDate"`
+	Intervals     *Intervals `json:"intervals"`
+	Reason        string     `json:"reason"`
 }
 
 type Taken struct {

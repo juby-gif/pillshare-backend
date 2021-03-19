@@ -21,8 +21,25 @@ func (c *Controller) getMedicalDatum(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	fmt.Println(medicalRecordFound)
+	
+	var data models.MedicalDataResponse
 
+	data.Name = medicalRecordFound.Name
+	data.Dose = medicalRecordFound.Dose
+	data.Measure = medicalRecordFound.Measure
+	data.IsDeleted = medicalRecordFound.IsDeleted
+	data.Dosage = medicalRecordFound.Dosage
+	data.BeforeOrAfter = medicalRecordFound.BeforeOrAfter
+	data.Duration = medicalRecordFound.Duration
+	data.StartDate = medicalRecordFound.StartDate
+	data.EndDate = medicalRecordFound.EndDate
+	data.Intervals = utils.GetUnMarshalledIntervals(w, r, medicalRecordFound.Intervals)
+	data.Reason = medicalRecordFound.Reason
+	err = json.NewEncoder(w).Encode(&data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 }
 
 func (c *Controller) postMedicalRecord(w http.ResponseWriter, r *http.Request) {
@@ -50,9 +67,9 @@ func (c *Controller) postMedicalRecord(w http.ResponseWriter, r *http.Request) {
 	duration := requestData.Duration
 	startDate := requestData.StartDate
 	endDate := requestData.EndDate
-	intervals :=  utils.GetMarshalledIntervals(w, r,requestData.Intervals) 
+	intervals := utils.GetMarshalledIntervals(w, r, requestData.Intervals)
 	reason := requestData.Reason
-	
+
 	record := models.MedicalRecord{
 		UserId:        userId,
 		Name:          name,
