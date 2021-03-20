@@ -22,8 +22,7 @@ func NewMedicalRepo(db *sql.DB) *MedicalRepo {
 func (med *MedicalRepo) CreateNewMedicalRecord(ctx context.Context, m *models.MedicalRecord) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	query := "INSERT INTO medical_database (user_id,name,dose,measure,is_deleted,dosage,before_or_after,duration,start_date,end_date,intervals,reason) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)"
-	fmt.Println("Processing...",m.UserId)
+	query := "INSERT INTO medical_database (user_id,record) VALUES ($1, $2)"
 	stmt, err := med.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
@@ -33,17 +32,7 @@ func (med *MedicalRepo) CreateNewMedicalRecord(ctx context.Context, m *models.Me
 	_, err = stmt.ExecContext(
 		ctx,
 		m.UserId,
-		m.Name,
-		m.Dose,
-		m.Measure,
-		m.IsDeleted,
-		m.Dosage,
-		m.BeforeOrAfter,
-		m.Duration,
-		m.StartDate,
-		m.EndDate,
-		m.Intervals,
-		m.Reason,
+		m.Record,
 	)
 	return err
 }
@@ -53,20 +42,10 @@ func (med *MedicalRepo) GetMedicalRecordByUserId(ctx context.Context, userId str
 	defer cancel()
 
 	m := new(models.MedicalRecord)
-	query := "SELECT user_id,name,dose,measure,is_deleted,dosage,before_or_after,duration,start_date,end_date,intervals,reason FROM medical_database WHERE user_id = $1"
+	query := "SELECT user_id,record FROM medical_database WHERE user_id = $1"
 	err := med.db.QueryRowContext(ctx, query, userId).Scan(
 		&m.UserId,
-		&m.Name,
-		&m.Dose,
-		&m.Measure,
-		&m.IsDeleted,
-		&m.Dosage,
-		&m.BeforeOrAfter,
-		&m.Duration,
-		&m.StartDate,
-		&m.EndDate,
-		&m.Intervals,
-		&m.Reason,
+		&m.Record,
 	)
 	if err != nil {
 		fmt.Println(err)
@@ -84,7 +63,7 @@ func (med *MedicalRepo) UpdateMedicalRecordByUserId(ctx context.Context, m *mode
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	query := "UPDATE medical_database SET name = $1,dose = $2,measure = $3,is_deleted = $4,dosage = $5,before_or_after = $6,duration = $7,start_date = $8,end_date = $9,intervals = $10,reason = $11  WHERE user_id = $12"
+	query := "UPDATE medical_database SET record = $1  WHERE user_id = $2"
 	stmt, err := med.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
@@ -93,17 +72,7 @@ func (med *MedicalRepo) UpdateMedicalRecordByUserId(ctx context.Context, m *mode
 
 	_, err = stmt.ExecContext(
 		ctx,
-		m.Name,
-		m.Dose,
-		m.Measure,
-		m.IsDeleted,
-		m.Dosage,
-		m.BeforeOrAfter,
-		m.Duration,
-		m.StartDate,
-		m.EndDate,
-		m.Intervals,
-		m.Reason,
+		m.Record,
 		m.UserId,
 	)
 	return err

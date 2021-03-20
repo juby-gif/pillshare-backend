@@ -10,19 +10,23 @@ type Intervals struct {
 	Time []string `json:"time"`
 }
 
+type Record struct {
+	Name          string     `json:"name"`
+	Dose          string     `json:"dose"`
+	Measure       string     `json:"measure"`
+	IsDeleted     bool       `json:"isDeleted"`
+	Dosage        string     `json:"dosage"`
+	BeforeOrAfter string     `json:"beforeOrAfter"`
+	Duration      int        `json:"duration"`
+	StartDate     time.Time  `json:"startDate"`
+	EndDate       time.Time  `json:"endDate"`
+	Intervals     *Intervals `json:"intervals"`
+	Reason        string     `json:"reason"`
+}
+
 type MedicalRecord struct {
-	UserId        string    `json:"userId"`
-	Name          string    `json:"name"`
-	Dose          string    `json:"dose"`
-	Measure       string    `json:"measure"`
-	IsDeleted     bool      `json:"isDeleted"`
-	Dosage        string    `json:"dosage"`
-	BeforeOrAfter string    `json:"beforeOrAfter"`
-	Duration      int       `json:"duration"`
-	StartDate     time.Time `json:"startDate"`
-	EndDate       time.Time `json:"endDate"`
-	Intervals     string    `json:"intervals"`
-	Reason        string    `json:"reason"`
+	UserId string `json:"userId"`
+	Record string `json:"record"`
 }
 
 type MedicalDataRequest struct {
@@ -41,17 +45,7 @@ type MedicalDataRequest struct {
 }
 
 type MedicalDataResponse struct {
-	Name          string     `json:"name"`
-	Dose          string     `json:"dose"`
-	Measure       string     `json:"measure"`
-	IsDeleted     bool       `json:"isDeleted"`
-	Dosage        string     `json:"dosage"`
-	BeforeOrAfter string     `json:"beforeOrAfter"`
-	Duration      int        `json:"duration"`
-	StartDate     time.Time  `json:"startDate"`
-	EndDate       time.Time  `json:"endDate"`
-	Intervals     *Intervals `json:"intervals"`
-	Reason        string     `json:"reason"`
+	Record []*Record `json:"record"`
 }
 
 type Taken struct {

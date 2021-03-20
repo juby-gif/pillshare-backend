@@ -52,3 +52,27 @@ func (c *Controller) DashboardValidator(data models.DashboardRequest) bool {
 		return true
 	}
 }
+
+func (c *Controller) MedicalDataValidator(data models.MedicalDataRequest) bool {
+
+	switch {
+	case data.Name == "":
+		return false
+	case data.Dose == "":
+		return false
+	case data.Measure == "":
+		return false
+	case data.Dosage == "":
+		return false
+	case data.BeforeOrAfter == "":
+		return false
+	case data.Duration == 0:
+		return false
+	case len(data.Intervals.Part) == 0:
+		return false
+	case len(data.Intervals.Time) == 0:
+		return false
+	default:
+		return true
+	}
+}

@@ -44,7 +44,7 @@ func GetMarshalledOxygenSaturationData(w http.ResponseWriter, r *http.Request, d
 	return marshalledData
 }
 
-func GetMarshalledIntervals(w http.ResponseWriter, r *http.Request, data *models.Intervals) []byte {
+func GetMarshalledMedicalRecord(w http.ResponseWriter, r *http.Request, data []*models.Record) []byte {
 	marshalledData, err := json.Marshal(data)
 	if err != nil {
 		GetCORSErrResponse(w, "Internal Server Error", http.StatusInternalServerError)
