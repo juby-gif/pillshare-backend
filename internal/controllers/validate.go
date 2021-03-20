@@ -1,6 +1,8 @@
 package controllers
 
 import (
+	"fmt"
+
 	"github.com/juby-gif/pillshare-server/internal/models"
 )
 
@@ -57,20 +59,28 @@ func (c *Controller) MedicalDataValidator(data models.MedicalDataRequest) bool {
 
 	switch {
 	case data.Name == "":
+		fmt.Println("1")
 		return false
 	case data.Dose == "":
+		fmt.Println("2")
 		return false
 	case data.Measure == "":
+		fmt.Println("3")
 		return false
 	case data.Dosage == "":
+		fmt.Println("4")
 		return false
 	case data.BeforeOrAfter == "":
+		fmt.Println("5")
 		return false
 	case data.Duration == 0:
+		fmt.Println("6")
 		return false
 	case len(data.Intervals.Part) == 0:
+		fmt.Println("7")
 		return false
 	case len(data.Intervals.Time) == 0:
+		fmt.Println("8")
 		return false
 	default:
 		return true

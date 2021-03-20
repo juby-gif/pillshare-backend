@@ -37,26 +37,25 @@ func (med *MedicalRepo) CreateNewMedicalRecord(ctx context.Context, m *models.Me
 	return err
 }
 
-func (med *MedicalRepo) GetMedicalRecordByUserId(ctx context.Context, userId string) (*models.MedicalRecord, error) {
+func (med *MedicalRepo) GetMedicalRecordByUserId(ctx context.Context, userId string) (string, error) {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
 	m := new(models.MedicalRecord)
-	query := "SELECT user_id,record FROM medical_database WHERE user_id = $1"
+	query := "SELECT record FROM medical_database WHERE user_id = $1"
 	err := med.db.QueryRowContext(ctx, query, userId).Scan(
-		&m.UserId,
 		&m.Record,
 	)
 	if err != nil {
 		fmt.Println(err)
 		// CASE 1 OF 2: Cannot find record with that userId.
 		if err == sql.ErrNoRows {
-			return nil, nil
+			return "", nil
 		} else { // CASE 2 OF 2: All other errors.
-			return nil, err
+			return "", err
 		}
 	}
-	return m, nil
+	return m.Record, nil
 }
 
 func (med *MedicalRepo) UpdateMedicalRecordByUserId(ctx context.Context, m *models.MedicalRecord) error {

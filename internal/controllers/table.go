@@ -60,7 +60,7 @@ func (c *Controller) postMedicalRecord(w http.ResponseWriter, r *http.Request) {
 		return
 	} else {
 		medicalRecordFound, err := c.MedicalRepo.GetMedicalRecordByUserId(ctx, userId)
-		if medicalRecordFound == nil {
+		if medicalRecordFound == "" {
 			newRecord := []*models.Record{}
 			newRecord = append(newRecord, &models.Record{
 				Name:          requestData.Name,
@@ -79,6 +79,30 @@ func (c *Controller) postMedicalRecord(w http.ResponseWriter, r *http.Request) {
 			record := models.MedicalRecord{
 				UserId: userId,
 				Record: string(marshalledNewRecord),
+			}
+			fmt.Println(record)
+
+			c.MedicalRepo.CreateOrUpdateMedicalRecordByUserId(ctx, userId, &record)
+		} else {
+			records := utils.GetUnMarshalledMedicalRecord(w, r, medicalRecordFound)
+			fmt.Println("Old record---> ", records)
+			records = append(records, &models.Record{
+				Name:          requestData.Name,
+				Dose:          requestData.Dose,
+				Measure:       requestData.Measure,
+				IsDeleted:     requestData.IsDeleted,
+				Dosage:        requestData.Dosage,
+				BeforeOrAfter: requestData.BeforeOrAfter,
+				Duration:      requestData.Duration,
+				StartDate:     requestData.StartDate,
+				EndDate:       requestData.EndDate,
+				Intervals:     requestData.Intervals,
+				Reason:        requestData.Reason,
+			})
+			marshalledRecord := utils.GetMarshalledMedicalRecord(w, r, records)
+			record := models.MedicalRecord{
+				UserId: userId,
+				Record: string(marshalledRecord),
 			}
 			fmt.Println(record)
 

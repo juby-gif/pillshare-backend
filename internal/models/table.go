@@ -60,7 +60,7 @@ type Missed struct {
 
 type MedicalRepo interface {
 	CreateNewMedicalRecord(ctx context.Context, m *MedicalRecord) error
-	GetMedicalRecordByUserId(ctx context.Context, userId string) (*MedicalRecord, error)
+	GetMedicalRecordByUserId(ctx context.Context, userId string) (string, error)
 	UpdateMedicalRecordByUserId(ctx context.Context, m *MedicalRecord) error
 	CreateOrUpdateMedicalRecordByUserId(ctx context.Context, userId string, m *MedicalRecord) error
 }

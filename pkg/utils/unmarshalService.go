@@ -57,3 +57,12 @@ func GetUnMarshalledIntervals(w http.ResponseWriter, r *http.Request, interval s
 	}
 	return &intervals
 }
+
+func GetUnMarshalledMedicalRecord(w http.ResponseWriter, r *http.Request, record string) []*models.Record {
+	var records []*models.Record
+	err := json.Unmarshal([]byte(record), &records)
+	if err != nil {
+		GetCORSErrResponse(w, "Internal Server Error", http.StatusInternalServerError)
+	}
+	return records
+}
