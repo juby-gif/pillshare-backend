@@ -45,7 +45,7 @@ type MedicalDataRequest struct {
 }
 
 type MedicalDataResponse struct {
-	Record []*Record `json:"record"`
+	Message string `json:"message"`
 }
 
 type Taken struct {
