@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
+	// "fmt"
 	"net/http"
 
 	"github.com/juby-gif/pillshare-server/internal/models"
@@ -219,7 +219,7 @@ func (c *Controller) postVitalsRecord(w http.ResponseWriter, r *http.Request) {
 			Glucose:          string(marshalledGlucoseRecord),
 			OxygenSaturation: string(marshalledOxygenSaturationRecord),
 		}
-		fmt.Println(record)
+		// fmt.Println(record)
 
 		// Invoke `CreateOrUpdateVitalsRecordByUserId` method with the created record
 		// and `userId` which will create or update the record in Postgresql
@@ -262,7 +262,7 @@ func (c *Controller) postVitalsRecord(w http.ResponseWriter, r *http.Request) {
 			OxygenSaturation: string(marshalledOxygenSaturationRecord),
 		}
 
-		fmt.Println(record)
+		// fmt.Println(record)
 
 		// Invoke `CreateOrUpdateVitalsRecordByUserId` method with the updated record
 		// and `userId` which will create or update the record in Postgresql

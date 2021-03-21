@@ -37,7 +37,6 @@ type OxygenSaturationData struct {
 }
 
 type VitalsRecordRequest struct {
-	UserId           string                `json:"userId"`
 	HeartRate        *HeartRateData        `json:"heartRate"`
 	BloodPressure    *BloodPressureData    `json:"bloodPressure"`
 	BodyTemperature  *BodyTemperatureData  `json:"bodyTemperature"`
