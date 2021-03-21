@@ -76,3 +76,21 @@ func (c *Controller) MedicalDataValidator(data models.MedicalDataRequest) bool {
 		return true
 	}
 }
+
+func (c *Controller) VitalsDataValidator(data models.VitalsRecordRequest) bool {
+
+	switch {
+	case data.HeartRate == nil:
+		return false
+	case data.BloodPressure == nil:
+		return false
+	case data.BodyTemperature == nil:
+		return false
+	case data.Glucose == nil:
+		return false
+	case data.OxygenSaturation == nil:
+		return false
+	default:
+		return true
+	}
+}

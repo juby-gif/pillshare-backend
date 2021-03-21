@@ -18,6 +18,7 @@ type Controller struct {
 	UserRepo      models.UserRepo
 	DashboardRepo models.DashboardRepo
 	MedicalRepo models.MedicalRepo
+	VitalsRepo models.VitalsRepo
 	cache         *cache.Cache
 }
 
@@ -25,12 +26,14 @@ func New(db *sql.DB) *Controller {
 	userRepo := repositories.NewUserRepo(db)
 	dashboardRepo := repositories.NewDashboardRepo(db)
 	medicalRepo := repositories.NewMedicalRepo(db)
+	vitalsRepo := repositories.NewVitalsRepo(db)
 	cache := utils.RedisCache()
 	return &Controller{
 		db:            db,
 		UserRepo:      userRepo,
 		DashboardRepo: dashboardRepo,
 		MedicalRepo: medicalRepo,
+		VitalsRepo: vitalsRepo,
 		cache:         cache,
 	}
 }
@@ -156,12 +159,49 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.postMedicalRecord(w, r)
 		}
-	case n == 3 && URL[2] == "heart-rate-data" && r.Method == "GET":
+	case n == 3 && URL[2] == "vitals-datum" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
-			c.getHeartRate(w, r)
+			c.getVitalsRecord(w, r)
 		}
+	case n == 3 && URL[2] == "vitals-data" && r.Method == "POST":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.postVitalsRecord(w, r)
+		}
+	case n == 3 && URL[2] == "heart-rate-datum" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getHeartRateRecord(w, r)
+		}
+	case n == 3 && URL[2] == "blood-pressure-datum" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getBloodPressureRecord(w, r)
+		}
+	case n == 3 && URL[2] == "body-temperature-datum" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getBodyTemperatureRecord(w, r)
+		}	
+	case n == 3 && URL[2] == "glucose-datum" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getGlucoseRecord(w, r)
+		}	
+	case n == 3 && URL[2] == "oxygen-saturation-datum" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getOxygenSaturationRecord(w, r)
+		}	
+		
 	//----------------------------------MEDICAL RECORDS---------------------------------//
 
 	
