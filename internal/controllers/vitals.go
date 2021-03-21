@@ -221,7 +221,7 @@ func (c *Controller) postVitalsRecord(w http.ResponseWriter, r *http.Request) {
 		}
 		fmt.Println(record)
 
-		// Invoke `CreateOrUpdateMedicalRecordByUserId` method with the created record
+		// Invoke `CreateOrUpdateVitalsRecordByUserId` method with the created record
 		// and `userId` which will create or update the record in Postgresql
 		c.VitalsRepo.CreateOrUpdateVitalsRecordByUserId(ctx, userId, &record)
 		message := &models.MedicalDataResponse{
@@ -264,11 +264,11 @@ func (c *Controller) postVitalsRecord(w http.ResponseWriter, r *http.Request) {
 
 		fmt.Println(record)
 
-		// Invoke `CreateOrUpdateMedicalRecordByUserId` method with the updated record
+		// Invoke `CreateOrUpdateVitalsRecordByUserId` method with the updated record
 		// and `userId` which will create or update the record in Postgresql
 		c.VitalsRepo.CreateOrUpdateVitalsRecordByUserId(ctx, userId, &record)
 		message := &models.MedicalDataResponse{
-			Message: "You have successfully added your pill.",
+			Message: "You have successfully added your vitals.",
 		}
 		if err := json.NewEncoder(w).Encode(&message); err != nil {
 			utils.GetCORSErrResponse(w, "Internal Server Error", http.StatusInternalServerError)
