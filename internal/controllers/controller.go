@@ -79,32 +79,45 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		r = r.WithContext(ctx)
 	}
 	switch {
+
+	//--------------------------------------VERSION--------------------------------------// 
 	case n == 3 && URL[2] == "version" && r.Method == "GET":
 		c.getVersion(w, r)
+	//--------------------------------------VERSION--------------------------------------// 
+
+
+	//-----------------------------------REFRESH TOKEN-----------------------------------// 
 	case n == 3 && URL[2] == "refresh-token" && r.Method == "GET":
 		c.postRefreshToken(w, r, accessToken)
+	//-----------------------------------REFRESH TOKEN-----------------------------------//  
+
+
+	//--------------------------------------GATEWAY--------------------------------------// 
 	case n == 3 && URL[2] == "login" && r.Method == "POST":
 		c.postLogin(w, r)
 	case n == 3 && URL[2] == "register" && r.Method == "POST":
 		c.postRegister(w, r)
+	//--------------------------------------GATEWAY--------------------------------------// 
+
+
+	//-------------------------------------DASHBOARD-------------------------------------// 
 	case n == 3 && URL[2] == "dashboard-datum" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.getDashboard(w, r)
 		}
+	
 	case n == 3 && URL[2] == "dashboard" && r.Method == "POST":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.postDashboard(w, r)
 		}
-	case n == 3 && URL[2] == "hello" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getHello(w, r)
-		}
+	//-------------------------------------DASHBOARD-------------------------------------// 
+
+
+	//------------------------------------USER PROFILE-----------------------------------// 
 	case n == 3 && URL[2] == "user" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
@@ -117,17 +130,20 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.patchUserProfile(w, r)
 		}
+	//------------------------------------USER PROFILE-----------------------------------//
+
+
+	//-------------------------------------NAVIGATION------------------------------------//
 	case n == 3 && URL[2] == "nav-header" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.getNavHeader(w, r, user)
 		}
-	
-	
-	
-	
-	
+	//-------------------------------------NAVIGATION------------------------------------//
+
+
+	//----------------------------------MEDICAL RECORDS---------------------------------//
 	case n == 3 && URL[2] == "medical-datum" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
@@ -140,6 +156,15 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.postMedicalRecord(w, r)
 		}
+	case n == 3 && URL[2] == "heart-rate-data" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getHeartRate(w, r)
+		}
+	//----------------------------------MEDICAL RECORDS---------------------------------//
+
+	
 	default:
 		http.NotFound(w, r)
 	}
