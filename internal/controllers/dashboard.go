@@ -45,13 +45,11 @@ func (c *Controller) getDashboard(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func (c *Controller) postDashboard(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) PostDashboard(w http.ResponseWriter, r *http.Request, requestData models.DashboardRequest) {
 	ctx := r.Context()
 	userId := ctx.Value("user_id").(string)
-
+fmt.Println("New Data ==>", requestData)
 	data := r.Body
-	var requestData models.DashboardRequest
-
 	err := json.NewDecoder(data).Decode(&requestData)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -68,8 +66,6 @@ func (c *Controller) postDashboard(w http.ResponseWriter, r *http.Request) {
 		bloodPressure := utils.GetMarshalledBloodPressureData(w, r, requestData.BloodPressure)
 		glucose := utils.GetMarshalledGlucoseData(w, r, requestData.Glucose)
 		oxygenSaturation := utils.GetMarshalledOxygenSaturationData(w, r, requestData.OxygenSaturation)
-		alertSent := requestData.AlertSent
-		alertsResponded := requestData.AlertsResponded
 		record := models.Dashboard{
 			UserId:           userId,
 			FirstName:        firstName,
@@ -78,10 +74,9 @@ func (c *Controller) postDashboard(w http.ResponseWriter, r *http.Request) {
 			BodyTemperature:  string(bodyTemperature),
 			Glucose:          string(glucose),
 			OxygenSaturation: string(oxygenSaturation),
-			AlertSent:        int(alertSent),
-			AlertsResponded:  int(alertsResponded),
 		}
 
 		c.DashboardRepo.CreateOrUpdateRecordByUserId(ctx, userId, &record)
 	}
 }
+

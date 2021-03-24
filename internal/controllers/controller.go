@@ -17,8 +17,8 @@ type Controller struct {
 	db            *sql.DB
 	UserRepo      models.UserRepo
 	DashboardRepo models.DashboardRepo
-	MedicalRepo models.MedicalRepo
-	VitalsRepo models.VitalsRepo
+	MedicalRepo   models.MedicalRepo
+	VitalsRepo    models.VitalsRepo
 	cache         *cache.Cache
 }
 
@@ -32,8 +32,8 @@ func New(db *sql.DB) *Controller {
 		db:            db,
 		UserRepo:      userRepo,
 		DashboardRepo: dashboardRepo,
-		MedicalRepo: medicalRepo,
-		VitalsRepo: vitalsRepo,
+		MedicalRepo:   medicalRepo,
+		VitalsRepo:    vitalsRepo,
 		cache:         cache,
 	}
 }
@@ -83,44 +83,33 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 	}
 	switch {
 
-	//--------------------------------------VERSION--------------------------------------// 
+	//--------------------------------------VERSION--------------------------------------//
 	case n == 3 && URL[2] == "version" && r.Method == "GET":
 		c.getVersion(w, r)
-	//--------------------------------------VERSION--------------------------------------// 
+	//--------------------------------------VERSION--------------------------------------//
 
-
-	//-----------------------------------REFRESH TOKEN-----------------------------------// 
+	//-----------------------------------REFRESH TOKEN-----------------------------------//
 	case n == 3 && URL[2] == "refresh-token" && r.Method == "GET":
 		c.postRefreshToken(w, r, accessToken)
-	//-----------------------------------REFRESH TOKEN-----------------------------------//  
+	//-----------------------------------REFRESH TOKEN-----------------------------------//
 
-
-	//--------------------------------------GATEWAY--------------------------------------// 
+	//--------------------------------------GATEWAY--------------------------------------//
 	case n == 3 && URL[2] == "login" && r.Method == "POST":
 		c.postLogin(w, r)
 	case n == 3 && URL[2] == "register" && r.Method == "POST":
 		c.postRegister(w, r)
-	//--------------------------------------GATEWAY--------------------------------------// 
+	//--------------------------------------GATEWAY--------------------------------------//
 
-
-	//-------------------------------------DASHBOARD-------------------------------------// 
+	//-------------------------------------DASHBOARD-------------------------------------//
 	case n == 3 && URL[2] == "dashboard-datum" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.getDashboard(w, r)
 		}
-	
-	case n == 3 && URL[2] == "dashboard" && r.Method == "POST":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.postDashboard(w, r)
-		}
-	//-------------------------------------DASHBOARD-------------------------------------// 
+	//-------------------------------------DASHBOARD-------------------------------------//
 
-
-	//------------------------------------USER PROFILE-----------------------------------// 
+	//------------------------------------USER PROFILE-----------------------------------//
 	case n == 3 && URL[2] == "user" && r.Method == "GET":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
@@ -135,7 +124,6 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		}
 	//------------------------------------USER PROFILE-----------------------------------//
 
-
 	//-------------------------------------NAVIGATION------------------------------------//
 	case n == 3 && URL[2] == "nav-header" && r.Method == "GET":
 		if authStatus != true {
@@ -144,7 +132,6 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 			c.getNavHeader(w, r, user)
 		}
 	//-------------------------------------NAVIGATION------------------------------------//
-
 
 	//----------------------------------MEDICAL RECORDS---------------------------------//
 	case n == 3 && URL[2] == "medical-datum" && r.Method == "GET":
@@ -159,53 +146,52 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.postMedicalRecord(w, r)
 		}
-	case n == 3 && URL[2] == "vitals-datum" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getVitalsRecord(w, r)
-		}
+	// case n == 3 && URL[2] == "vitals-datum" && r.Method == "GET":
+	// 	if authStatus != true {
+	// 		utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+	// 	} else {
+	// 		c.getVitalsRecord(w, r)
+	// 	}
 	case n == 3 && URL[2] == "vitals-data" && r.Method == "POST":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
 		} else {
 			c.postVitalsRecord(w, r)
 		}
-	case n == 3 && URL[2] == "heart-rate-datum" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getHeartRateRecord(w, r)
-		}
-	case n == 3 && URL[2] == "blood-pressure-datum" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getBloodPressureRecord(w, r)
-		}
-	case n == 3 && URL[2] == "body-temperature-datum" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getBodyTemperatureRecord(w, r)
-		}	
-	case n == 3 && URL[2] == "glucose-datum" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getGlucoseRecord(w, r)
-		}	
-	case n == 3 && URL[2] == "oxygen-saturation-datum" && r.Method == "GET":
-		if authStatus != true {
-			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-		} else {
-			c.getOxygenSaturationRecord(w, r)
-		}	
-		
+	// case n == 3 && URL[2] == "heart-rate-datum" && r.Method == "GET":
+	// 	if authStatus != true {
+	// 		utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+	// 	} else {
+	// 		c.getHeartRateRecord(w, r)
+	// 	}
+	// case n == 3 && URL[2] == "blood-pressure-datum" && r.Method == "GET":
+	// 	if authStatus != true {
+	// 		utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+	// 	} else {
+	// 		c.getBloodPressureRecord(w, r)
+	// 	}
+	// case n == 3 && URL[2] == "body-temperature-datum" && r.Method == "GET":
+	// 	if authStatus != true {
+	// 		utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+	// 	} else {
+	// 		c.getBodyTemperatureRecord(w, r)
+	// 	}
+	// case n == 3 && URL[2] == "glucose-datum" && r.Method == "GET":
+	// 	if authStatus != true {
+	// 		utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+	// 	} else {
+	// 		c.getGlucoseRecord(w, r)
+	// 	}
+	// case n == 3 && URL[2] == "oxygen-saturation-datum" && r.Method == "GET":
+	// if authStatus != true {
+	// 	utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+	// } else {
+	// 	c.getOxygenSaturationRecord(w, r)
+	// }
+
 	//----------------------------------MEDICAL RECORDS---------------------------------//
 
-	
 	default:
 		http.NotFound(w, r)
 	}
-	}
+}

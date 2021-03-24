@@ -83,7 +83,10 @@ type Dashboard struct {
 
 type DashboardRepo interface {
 	CreateNewDataRecord(ctx context.Context, m *Dashboard) error
+	CreateNewAlertsRecord(ctx context.Context, m *Dashboard) error
 	GetDashboardByUserId(ctx context.Context, user_id string) (*Dashboard, error)
 	UpdateRecordByUserId(ctx context.Context, m *Dashboard) error
+	UpdateAlertsByUserId(ctx context.Context, m *Dashboard) error
 	CreateOrUpdateRecordByUserId(ctx context.Context, userId string, m *Dashboard) error
+	CreateOrUpdateAlertsByUserId(ctx context.Context, userId string, m *Dashboard) error
 }

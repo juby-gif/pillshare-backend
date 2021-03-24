@@ -22,7 +22,7 @@ func NewDashboardRepo(db *sql.DB) *DashboardRepo {
 func (r *DashboardRepo) CreateNewDataRecord(ctx context.Context, m *models.Dashboard) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	query := "INSERT INTO dashboard_dataset (user_id,first_name,heart_rate,blood_pressure,body_temperature,glucose,oxygen_saturation,alerts_sent,alerts_responded) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)"
+	query := "INSERT INTO dashboard_dataset (user_id,first_name,heart_rate,blood_pressure,body_temperature,glucose,oxygen_saturation) VALUES ($1, $2, $3, $4, $5, $6, $7)"
 
 	stmt, err := r.db.PrepareContext(ctx, query)
 	if err != nil {
@@ -39,6 +39,23 @@ func (r *DashboardRepo) CreateNewDataRecord(ctx context.Context, m *models.Dashb
 		m.BodyTemperature,
 		m.Glucose,
 		m.OxygenSaturation,
+	)
+	return err
+}
+
+func (r *DashboardRepo) CreateNewAlertsRecord(ctx context.Context, m *models.Dashboard) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+	query := "INSERT INTO dashboard_dataset (alerts_sent,alerts_responded) VALUES ($1, $2)"
+
+	stmt, err := r.db.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(
+		ctx,
 		m.AlertSent,
 		m.AlertsResponded,
 	)
@@ -78,7 +95,7 @@ func (r *DashboardRepo) UpdateRecordByUserId(ctx context.Context, m *models.Dash
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	query := "UPDATE dashboard_dataset SET first_name = $1,heart_rate = $2,blood_pressure = $3,body_temperature = $4,glucose = $5,oxygen_saturation = $6,alerts_sent = $7,alerts_responded = $8  WHERE user_id = $9"
+	query := "UPDATE dashboard_dataset SET first_name = $1,heart_rate = $2,blood_pressure = $3,body_temperature = $4,glucose = $5,oxygen_saturation = $6  WHERE user_id = $9"
 	stmt, err := r.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
@@ -93,6 +110,24 @@ func (r *DashboardRepo) UpdateRecordByUserId(ctx context.Context, m *models.Dash
 		m.BodyTemperature,
 		m.Glucose,
 		m.OxygenSaturation,
+		m.UserId,
+	)
+	return err
+}
+
+func (r *DashboardRepo) UpdateAlertsByUserId(ctx context.Context, m *models.Dashboard) error {
+	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
+	defer cancel()
+
+	query := "UPDATE dashboard_dataset SET alerts_sent = $1, alerts_responded= $2  WHERE user_id = $3"
+	stmt, err := r.db.PrepareContext(ctx, query)
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+
+	_, err = stmt.ExecContext(
+		ctx,
 		m.AlertSent,
 		m.AlertsResponded,
 		m.UserId,
@@ -133,6 +168,26 @@ func (r *DashboardRepo) CreateOrUpdateRecordByUserId(ctx context.Context, userId
 		}
 	} else { // CASE 2 OF 2: Create
 		createErr := r.CreateNewDataRecord(ctx, m)
+		if createErr != nil {
+			return createErr
+		}
+	}
+	return nil
+}
+
+func (r *DashboardRepo) CreateOrUpdateAlertsByUserId(ctx context.Context, userId string, m *models.Dashboard) error {
+	exists, err := r.CheckIfUserRecordExistsByUserId(context.Background(), userId)
+	if err != nil {
+		return err
+	}
+
+	if exists { // CASE 1 OF 2: Update
+		updateErr := r.UpdateAlertsByUserId(ctx, m)
+		if updateErr != nil {
+			return updateErr
+		}
+	} else { // CASE 2 OF 2: Create
+		createErr := r.CreateNewAlertsRecord(ctx, m)
 		if createErr != nil {
 			return createErr
 		}
