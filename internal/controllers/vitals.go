@@ -7,7 +7,7 @@ import (
 	"net/http"
 
 	"github.com/juby-gif/pillshare-server/internal/models"
-	// "github.com/juby-gif/pillshare-server/pkg/utils"
+	"github.com/juby-gif/pillshare-server/pkg/utils"
 )
 
 // func (c *Controller) getVitalsRecord(w http.ResponseWriter, r *http.Request) {
@@ -55,13 +55,13 @@ func (c *Controller) postVitalsRecord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// // Validate the requestData
-	// // If any of the fields are missing, it will return false which will send error to the client
+	// Validate the requestData
+	// If any of the fields are missing, it will return false which will send error to the client
 	// If all the fields are validated it will return true
-	// if c.VitalsDataValidator(requestData) == false {
-	// 	utils.GetCORSErrResponse(w, "Fields are not properly formated", http.StatusBadRequest)
-	// 	return
-	// } else {
+	if c.VitalsDataValidator(requestData) == false {
+		utils.GetCORSErrResponse(w, "Fields are not properly formated", http.StatusBadRequest)
+		return
+	} else {
 
 	record := models.TimeSeriesRecord{
 		UserId:       userId,
@@ -103,5 +103,5 @@ func (c *Controller) postVitalsRecord(w http.ResponseWriter, r *http.Request) {
 		DiastoleReading: requestData.BloodPressure.DiastoleReading,
 	}
 	c.VitalsRepo.CreateNewBloodPressureRecord(ctx, &brecord)
-	// }
+	}
 }
