@@ -46,8 +46,8 @@ func (c *Controller) getDashboard(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) PostDashboard(w http.ResponseWriter, r *http.Request, requestData models.DashboardRequest) {
-	ctx := r.Context()
-	userId := ctx.Value("user_id").(string)
+	// ctx := r.Context()
+	// userId := ctx.Value("user_id").(string)
 fmt.Println("New Data ==>", requestData)
 	data := r.Body
 	err := json.NewDecoder(data).Decode(&requestData)
@@ -60,23 +60,21 @@ fmt.Println("New Data ==>", requestData)
 		utils.GetCORSErrResponse(w, "Fields are not properly formated", http.StatusBadRequest)
 		return
 	} else {
-		firstName := requestData.FirstName
-		heartRate := utils.GetMarshalledHeartData(w, r, requestData.HeartRate)
-		bodyTemperature := utils.GetMarshalledBodyTemperatureData(w, r, requestData.BodyTemperature)
-		bloodPressure := utils.GetMarshalledBloodPressureData(w, r, requestData.BloodPressure)
-		glucose := utils.GetMarshalledGlucoseData(w, r, requestData.Glucose)
-		oxygenSaturation := utils.GetMarshalledOxygenSaturationData(w, r, requestData.OxygenSaturation)
-		record := models.Dashboard{
-			UserId:           userId,
-			FirstName:        firstName,
-			HeartRate:        string(heartRate),
-			BloodPressure:    string(bloodPressure),
-			BodyTemperature:  string(bodyTemperature),
-			Glucose:          string(glucose),
-			OxygenSaturation: string(oxygenSaturation),
-		}
+		// heartRate := utils.GetMarshalledHeartData(w, r, requestData.HeartRate)
+		// bodyTemperature := utils.GetMarshalledBodyTemperatureData(w, r, requestData.BodyTemperature)
+		// bloodPressure := utils.GetMarshalledBloodPressureData(w, r, requestData.BloodPressure)
+		// glucose := utils.GetMarshalledGlucoseData(w, r, requestData.Glucose)
+		// oxygenSaturation := utils.GetMarshalledOxygenSaturationData(w, r, requestData.OxygenSaturation)
+		// record := models.Dashboard{
+		// 	UserId:           userId,
+		// 	HeartRate:        string(heartRate),
+		// 	BloodPressure:    string(bloodPressure),
+		// 	BodyTemperature:  string(bodyTemperature),
+		// 	Glucose:          string(glucose),
+		// 	OxygenSaturation: string(oxygenSaturation),
+		// }
 
-		c.DashboardRepo.CreateOrUpdateRecordByUserId(ctx, userId, &record)
+		// c.DashboardRepo.CreateOrUpdateRecordByUserId(ctx, userId, &record)
 	}
 }
 

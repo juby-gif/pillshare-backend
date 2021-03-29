@@ -146,12 +146,12 @@ func (c *Controller) HandleRequests(w http.ResponseWriter, r *http.Request) {
 		} else {
 			c.postMedicalRecord(w, r)
 		}
-	// case n == 3 && URL[2] == "vitals-datum" && r.Method == "GET":
-	// 	if authStatus != true {
-	// 		utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
-	// 	} else {
-	// 		c.getVitalsRecord(w, r)
-	// 	}
+	case n == 3 && URL[2] == "vitals-datum" && r.Method == "GET":
+		if authStatus != true {
+			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)
+		} else {
+			c.getVitalsRecord(w, r)
+		}
 	case n == 3 && URL[2] == "vitals-data" && r.Method == "POST":
 		if authStatus != true {
 			utils.GetCORSErrResponse(w, "You are not Authorized!", http.StatusUnauthorized)

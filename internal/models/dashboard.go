@@ -47,15 +47,12 @@ type OxygenSaturation struct {
 // }
 
 type DashboardRequest struct {
-	FirstName        string            `json:"firstName"`
 	UserId           string            `json:"userId"`
 	HeartRate        *HeartRate        `json:"heartRate"`
 	BloodPressure    *BloodPressure    `json:"bloodPressure"`
 	BodyTemperature  *BodyTemperature  `json:"bodyTemperature"`
 	Glucose          *Glucose          `json:"glucose"`
 	OxygenSaturation *OxygenSaturation `json:"oxygenSaturation"`
-	AlertSent        int               `json:"alertsSent"`
-	AlertsResponded  int               `json:"alertsResponded"`
 }
 
 type DashboardResponse struct {

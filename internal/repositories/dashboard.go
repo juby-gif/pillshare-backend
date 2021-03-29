@@ -22,7 +22,7 @@ func NewDashboardRepo(db *sql.DB) *DashboardRepo {
 func (r *DashboardRepo) CreateNewDataRecord(ctx context.Context, m *models.Dashboard) error {
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
-	query := "INSERT INTO dashboard_dataset (user_id,first_name,heart_rate,blood_pressure,body_temperature,glucose,oxygen_saturation) VALUES ($1, $2, $3, $4, $5, $6, $7)"
+	query := "INSERT INTO dashboard_dataset (user_id,heart_rate,blood_pressure,body_temperature,glucose,oxygen_saturation) VALUES ($1, $2, $3, $4, $5, $6)"
 
 	stmt, err := r.db.PrepareContext(ctx, query)
 	if err != nil {
@@ -33,7 +33,6 @@ func (r *DashboardRepo) CreateNewDataRecord(ctx context.Context, m *models.Dashb
 	_, err = stmt.ExecContext(
 		ctx,
 		m.UserId,
-		m.FirstName,
 		m.HeartRate,
 		m.BloodPressure,
 		m.BodyTemperature,
@@ -67,10 +66,9 @@ func (r *DashboardRepo) GetDashboardByUserId(ctx context.Context, userId string)
 	defer cancel()
 
 	m := new(models.Dashboard)
-	query := "SELECT user_id,first_name,heart_rate,blood_pressure,body_temperature,glucose,oxygen_saturation,alerts_sent,alerts_responded FROM dashboard_dataset WHERE user_id = $1"
+	query := "SELECT user_id,heart_rate,blood_pressure,body_temperature,glucose,oxygen_saturation,alerts_sent,alerts_responded FROM dashboard_dataset WHERE user_id = $1"
 	err := r.db.QueryRowContext(ctx, query, userId).Scan(
 		&m.UserId,
-		&m.FirstName,
 		&m.HeartRate,
 		&m.BloodPressure,
 		&m.BodyTemperature,
@@ -95,7 +93,7 @@ func (r *DashboardRepo) UpdateRecordByUserId(ctx context.Context, m *models.Dash
 	ctx, cancel := context.WithTimeout(ctx, 5*time.Second)
 	defer cancel()
 
-	query := "UPDATE dashboard_dataset SET first_name = $1,heart_rate = $2,blood_pressure = $3,body_temperature = $4,glucose = $5,oxygen_saturation = $6  WHERE user_id = $9"
+	query := "UPDATE dashboard_dataset SET heart_rate = $1,blood_pressure = $2,body_temperature = $3,glucose = $4,oxygen_saturation = $5  WHERE user_id = $6"
 	stmt, err := r.db.PrepareContext(ctx, query)
 	if err != nil {
 		return err
@@ -104,7 +102,6 @@ func (r *DashboardRepo) UpdateRecordByUserId(ctx context.Context, m *models.Dash
 
 	_, err = stmt.ExecContext(
 		ctx,
-		m.FirstName,
 		m.HeartRate,
 		m.BloodPressure,
 		m.BodyTemperature,

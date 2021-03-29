@@ -36,8 +36,6 @@ func (c *Controller) RegisterValidator(data models.RegisterRequest) bool {
 func (c *Controller) DashboardValidator(data models.DashboardRequest) bool {
 
 	switch {
-	case data.FirstName == "":
-		return false
 	case data.HeartRate == nil:
 		return false
 	case data.BloodPressure == nil:

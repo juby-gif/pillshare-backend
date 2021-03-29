@@ -20,3 +20,29 @@ func GetCORSErrResponse(w http.ResponseWriter, message string, code int) {
 	}
 }
 
+func EmptyTSDErrorHandler(w http.ResponseWriter, tsdRecord []*models.TimeSeriesRecord, err error) bool {
+
+	if tsdRecord == nil {
+		GetCORSErrResponse(w, "No Data Found", http.StatusBadRequest)
+		return true
+	}
+	if err != nil {
+		GetCORSErrResponse(w, "Internal Server Error", http.StatusInternalServerError)
+		return true
+	}
+	return false
+}
+
+func EmptyBloodPressureErrorHandler(w http.ResponseWriter, bloodPressureRecord []*models.BloodPressureRecord, err error) bool {
+
+	if bloodPressureRecord == nil {
+		GetCORSErrResponse(w, "No Data Found", http.StatusBadRequest)
+		return true
+	}
+	if err != nil {
+		GetCORSErrResponse(w, "Internal Server Error", http.StatusInternalServerError)
+		return true
+	}
+	return false
+}
+

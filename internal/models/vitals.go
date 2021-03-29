@@ -45,14 +45,14 @@ type VitalsRecordRequest struct {
 }
 
 type TimeSeriesRecord struct {
-	UserId       string    `json:"userId"`
+	UserId       string    `json:"userId,omitempty"`
 	InstrumentID int       `json:"instrumentId"`
 	Time         time.Time `json:"time"`
 	Reading      float64   `json:"reading"`
 }
 
 type BloodPressureRecord struct {
-	UserId          string    `json:"userId"`
+	UserId          string    `json:"userId,omitempty"`
 	InstrumentID    int       `json:"instrumentId"`
 	Time            time.Time `json:"time"`
 	SystoleReading  float64   `json:"systoleReading"`
@@ -60,15 +60,16 @@ type BloodPressureRecord struct {
 }
 
 type VitalsRecordResponse struct {
-	HeartRate        []*HeartRateData        `json:"heartRate"`
-	BloodPressure    []*BloodPressureData    `json:"bloodPressure"`
-	BodyTemperature  []*BodyTemperatureData  `json:"bodyTemperature"`
-	Glucose          []*GlucoseData          `json:"glucose"`
-	OxygenSaturation []*OxygenSaturationData `json:"oxygenSaturation"`
+	HeartRate        []*TimeSeriesRecord    `json:"heartRate"`
+	BloodPressure    []*BloodPressureRecord `json:"bloodPressure"`
+	BodyTemperature  []*TimeSeriesRecord    `json:"bodyTemperature"`
+	Glucose          []*TimeSeriesRecord    `json:"glucose"`
+	OxygenSaturation []*TimeSeriesRecord    `json:"oxygenSaturation"`
 }
 
 type VitalsRepo interface {
 	CreateNewTimeSeriesRecord(ctx context.Context, m *TimeSeriesRecord) error
 	CreateNewBloodPressureRecord(ctx context.Context, m *BloodPressureRecord) error
-	GetAllTimeSeriesRecordByUserId(ctx context.Context) ([]*TimeSeriesRecord, error)
+	GetTimeSeriesRecordByInstrumentIdandUserId(ctx context.Context, userId string, instrumentId int) ([]*TimeSeriesRecord, error)
+	GetBloodPressureRecordByUserId(ctx context.Context, userId string) ([]*BloodPressureRecord, error)
 }
