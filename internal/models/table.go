@@ -25,8 +25,17 @@ type Record struct {
 }
 
 type MedicalRecord struct {
-	UserId string `json:"userId"`
-	Record string `json:"record"`
+	UserUUID      string    `json:"userUUID"`
+	Name          string    `json:"name"`
+	Dose          string    `json:"dose"`
+	Measure       string    `json:"measure"`
+	IsDeleted     bool      `json:"isDeleted"`
+	Dosage        string    `json:"dosage"`
+	BeforeOrAfter string    `json:"beforeOrAfter"`
+	Duration      int       `json:"duration"`
+	StartDate     time.Time `json:"startDate"`
+	EndDate       time.Time `json:"endDate"`
+	Reason        string    `json:"reason"`
 }
 
 type MedicalDataRequest struct {
@@ -60,7 +69,7 @@ type Missed struct {
 
 type MedicalRepo interface {
 	CreateNewMedicalRecord(ctx context.Context, m *MedicalRecord) error
-	GetMedicalRecordByUserId(ctx context.Context, userId string) (string, error)
+	GetMedicalRecordByUserId(ctx context.Context, userId string) (*MedicalRecord, error)
 	UpdateMedicalRecordByUserId(ctx context.Context, m *MedicalRecord) error
 	CreateOrUpdateMedicalRecordByUserId(ctx context.Context, userId string, m *MedicalRecord) error
 }
